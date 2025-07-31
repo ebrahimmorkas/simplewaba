@@ -244,12 +244,12 @@
                         
                         <!-- Action Buttons -->
                         <div class="flex gap-2">
+                            <input type="text" 
+                                   x-model="searchTerm"
+                                   @input="filterTags()"
+                                   placeholder="Search tags..." 
+                                   class="w-full sm:w-64 pl-10 pr-4 py-2 bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition-all">
                             <!-- Add New Tag -->
-                             <input type="text" 
-       x-model="searchTerm"
-       @input="filterTags()"
-       placeholder="Search tags..." 
-       class="w-full sm:w-64 pl-10 pr-4 py-2 bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition-all">
                             <button @click="showAddModal = true" class="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg">
                                 <i class="fas fa-plus mr-2"></i>
                                 Add Tag
@@ -262,76 +262,83 @@
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-gray-50/50 backdrop-blur-sm border-b border-gray-200/50">
-                            
                             <tr>
                                 <th class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tag Name</th>
                                 <th class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                      <tbody class="bg-white/30 backdrop-blur-sm divide-y divide-gray-200/50">
-    <!-- Loading State -->
-    <tr x-show="loading">
-        <td colspan="2" class="px-6 py-12 text-center text-gray-500">
-            <div class="flex flex-col items-center">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
-                <p class="text-lg font-medium">Loading tags...</p>
-            </div>
-        </td>
-    </tr>
-    
-    <!-- Error State -->
-    <tr x-show="error && !loading">
-        <td colspan="2" class="px-6 py-12 text-center text-red-500">
-            <div class="flex flex-col items-center">
-                <i class="fas fa-exclamation-triangle text-4xl text-red-300 mb-4"></i>
-                <p class="text-lg font-medium" x-text="error"></p>
-                <button @click="fetchTags()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                    Try Again
-                </button>
-            </div>
-        </td>
-    </tr>
-    
-    <!-- Tags Data -->
-    <template x-for="tag in paginatedTags" :key="tag.id">
-        <tr x-show="!loading && !error" class="hover:bg-gray-50/50 transition-colors">
-            <td class="px-6 py-4 whitespace-nowrap text-center">
-                <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full" 
-                      :class="{
-                          'bg-blue-100 text-blue-800': tag.id % 4 === 0,
-                          'bg-green-100 text-green-800': tag.id % 4 === 1,
-                          'bg-purple-100 text-purple-800': tag.id % 4 === 2,
-                          'bg-orange-100 text-orange-800': tag.id % 4 === 3
-                      }"
-                      x-text="tag.name"></span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex items-center justify-center space-x-4">
-                    <!-- Edit Button -->
-                    <button @click="editTag(tag)" class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    
-                    <!-- Delete Button -->
-                    <button @click="deleteTag(tag.id)" class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </td>
-        </tr>
-    </template>
-    
-    <!-- No tags state -->
-    <tr x-show="!loading && !error && filteredTags.length === 0">
-        <td colspan="2" class="px-6 py-12 text-center text-gray-500">
-            <div class="flex flex-col items-center">
-                <i class="fas fa-tags text-4xl text-gray-300 mb-4"></i>
-                <p class="text-lg font-medium">No tags found</p>
-                <p class="text-sm">Try adding a new tag</p>
-            </div>
-        </td>
-    </tr>
-</tbody>
+                        <tbody class="bg-white/30 backdrop-blur-sm divide-y divide-gray-200/50">
+                            <!-- Loading State -->
+                            <tr x-show="loading">
+                                <td colspan="2" class="px-6 py-12 text-center text-gray-500">
+                                    <div class="flex flex-col items-center">
+                                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
+                                        <p class="text-lg font-medium">Loading tags...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Error State -->
+                            <tr x-show="error && !loading">
+                                <td colspan="2" class="px-6 py-12 text-center text-red-500">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fas fa-exclamation-triangle text-4xl text-red-300 mb-4"></i>
+                                        <p class="text-lg font-medium" x-text="error"></p>
+                                        <button @click="fetchTags()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                            Try Again
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Tags Data -->
+                            <template x-for="tag in paginatedTags" :key="tag.id">
+                                <tr x-show="!loading && !error" class="hover:bg-gray-50/50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full" 
+                                              :class="{
+                                                  'bg-blue-100 text-blue-800': tag.id % 4 === 0,
+                                                  'bg-green-100 text-green-800': tag.id % 4 === 1,
+                                                  'bg-purple-100 text-purple-800': tag.id % 4 === 2,
+                                                  'bg-orange-100 text-orange-800': tag.id % 4 === 3
+                                              }"
+                                              x-text="tag.name"></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="flex items-center justify-center space-x-4">
+                                            <!-- Edit Button -->
+                                            <button @click="editTag(tag)" 
+                                                    :disabled="!tag.id || !isValidTag(tag.id)"
+                                                    class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors" 
+                                                    :class="{'opacity-50 cursor-not-allowed': !tag.id || !isValidTag(tag.id)}"
+                                                    title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            
+                                            <!-- Delete Button -->
+                                            <button @click="deleteTag(tag.id)" 
+                                                    :disabled="!tag.id || !isValidTag(tag.id)"
+                                                    class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors" 
+                                                    :class="{'opacity-50 cursor-not-allowed': !tag.id || !isValidTag(tag.id)}"
+                                                    title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                            
+                            <!-- No tags state -->
+                            <tr x-show="!loading && !error && filteredTags.length === 0">
+                                <td colspan="2" class="px-6 py-12 text-center text-gray-500">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fas fa-tags text-4xl text-gray-300 mb-4"></i>
+                                        <p class="text-lg font-medium">No tags found</p>
+                                        <p class="text-sm">Try adding a new tag</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
 
@@ -448,7 +455,6 @@
                         Update Tag
                     </button>
                     <button @click="showEditModal = false" 
-                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow
                             class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                         Cancel
                     </button>
@@ -488,10 +494,6 @@ function tagsPage() {
                 this.loading = true;
                 this.error = null;
                 
-                console.log('Fetching tags...');
-                console.log('Token:', '{{ session("tickzap_token") }}');
-                console.log('WABA ID:', '{{ session("waba_id") }}');
-                
                 const response = await fetch(`https://api.tickzap.com/api/tags/{{ session("waba_id") }}`, {
                     method: 'GET',
                     headers: {
@@ -501,44 +503,40 @@ function tagsPage() {
                     }
                 });
 
-                console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
-
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
-                console.log('API Response:', data);
-                
+                console.log('Fetched tags:', data);
                 // Map API response to match the expected tag structure
-                this.tags = data.data.map(tag => ({
+                this.tags = (Array.isArray(data) ? data : data.data || data.tags || []).map(tag => ({
                     id: tag.id,
-                    name: tag.tag_name || '-'
-                }));
-                
-                console.log('Parsed tags:', this.tags);
-                this.filteredTags = this.tags;
-                console.log('Filtered tags:', this.filteredTags);
+                    name: tag.tag_name || tag.name || '-'
+                })).filter(tag => tag.id && tag.name !== '-');
+                this.filteredTags = [...this.tags]; // Ensure reactivity
                 
             } catch (error) {
                 console.error('Error fetching tags:', error);
                 this.error = 'Failed to load tags. Please try again.';
             } finally {
                 this.loading = false;
-                console.log('Loading finished. Tags count:', this.tags.length);
             }
+        },
+        
+        isValidTag(id) {
+            return this.tags.some(t => t.id === id);
         },
         
         filterTags() {
             if (this.searchTerm === '') {
-                this.filteredTags = this.tags;
+                this.filteredTags = [...this.tags]; // Create new array for reactivity
             } else {
                 this.filteredTags = this.tags.filter(tag => 
-                    tag.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+                    tag.name && tag.name.toLowerCase().includes(this.searchTerm.toLowerCase())
                 );
             }
-            this.currentPage = 1; // Reset to first page when searching
+            this.currentPage = 1; // Reset to first page
         },
         
         get totalPages() {
@@ -569,39 +567,208 @@ function tagsPage() {
             }
         },
         
-        addTag() {
+        async addTag() {
             if (this.newTag.name.trim() !== '') {
-                const newId = this.tags.length > 0 ? Math.max(...this.tags.map(t => t.id)) + 1 : 1;
-                this.tags.push({
-                    id: newId,
-                    name: this.newTag.name.trim()
-                });
-                this.newTag.name = '';
-                this.showAddModal = false;
-                this.filterTags();
+                try {
+                    this.loading = true;
+                    const headers = {
+                        'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    };
+                    console.log('Add tag request headers:', headers);
+                    console.log('Add tag request body:', {
+                        tag_name: this.newTag.name.trim(),
+                        whatsapp_business_account_id: '378243102032704'
+                    });
+                    const response = await fetch('https://api.tickzap.com/api/tags', {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify({
+                            tag_name: this.newTag.name.trim(),
+                            whatsapp_business_account_id: '378243102032704'
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Add tag response:', data);
+                    
+                    // Normalize the tag object with flexible response handling
+                    const newTag = {
+                        id: data.id || (data.tag?.id) || (data.data?.id) || null,
+                        name: data.tag_name || (data.tag?.tag_name) || (data.data?.tag_name) || this.newTag.name.trim(),
+                        whatsapp_business_account_id: data.whatsapp_business_account_id || (data.tag?.whatsapp_business_account_id) || (data.data?.whatsapp_business_account_id) || '378243102032704'
+                    };
+
+                    // If ID is missing, fetch tags to ensure consistency
+                    if (!newTag.id) {
+                        console.warn('No tag ID in response, fetching tags...');
+                        await this.fetchTags();
+                    } else {
+                        // Add to tags array and trigger UI update
+                        this.tags = [...this.tags, newTag];
+                        this.filterTags();
+                    }
+
+                    this.newTag.name = '';
+                    this.showAddModal = false;
+                    this.currentPage = this.totalPages; // Go to last page
+                    
+                } catch (error) {
+                    console.error('Error adding tag:', error);
+                    alert(`Failed to add tag: ${error.message}`);
+                    // Attempt to fetch tags to sync state
+                    await this.fetchTags();
+                } finally {
+                    this.loading = false;
+                }
+            } else {
+                alert('Tag name cannot be empty.');
             }
         },
         
         editTag(tag) {
-            this.editingTag = { ...tag };
+            if (!tag || !tag.id || !this.isValidTag(tag.id)) {
+                alert('Invalid or deleted tag selected. Please select a valid tag.');
+                this.fetchTags();
+                return;
+            }
+            this.editingTag = {
+                id: tag.id,
+                name: tag.name || ''
+            };
             this.showEditModal = true;
         },
         
-        updateTag() {
+        async updateTag() {
             if (this.editingTag.name.trim() !== '') {
-                const index = this.tags.findIndex(t => t.id === this.editingTag.id);
-                if (index !== -1) {
-                    this.tags[index].name = this.editingTag.name.trim();
+                if (!this.editingTag.id || !this.isValidTag(this.editingTag.id)) {
+                    alert('Tag not found or deleted. Please select a valid tag.');
                     this.showEditModal = false;
-                    this.filterTags();
+                    await this.fetchTags();
+                    return;
                 }
+                try {
+                    this.loading = true;
+                    const headers = {
+                        'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    };
+                    console.log('Update tag request headers:', headers);
+                    console.log('Updating tag with ID:', this.editingTag.id);
+                    const response = await fetch(`https://api.tickzap.com/api/tags-update/${this.editingTag.id}`, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify({
+                            tag_name: this.editingTag.name.trim()
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Update tag response:', data);
+                    
+                    // Normalize the updated tag object
+                    const updatedTag = {
+                        id: this.editingTag.id,
+                        name: data.tag_name || (data.tag ? data.tag.tag_name : this.editingTag.name.trim()),
+                        whatsapp_business_account_id: data.whatsapp_business_account_id || this.tags.find(t => t.id === this.editingTag.id)?.whatsapp_business_account_id
+                    };
+
+                    if (!updatedTag.id || !updatedTag.name) {
+                        throw new Error('Invalid tag data returned from server');
+                    }
+
+                    // Update local array
+                    const index = this.tags.findIndex(t => t.id === this.editingTag.id);
+                    if (index !== -1) {
+                        this.tags[index] = updatedTag;
+                        this.tags = [...this.tags]; // Trigger reactivity
+                        this.showEditModal = false;
+                        this.filterTags();
+                    } else {
+                        console.error('Tag not found in local array:', this.editingTag.id);
+                        alert('Tag not found locally. Refreshing tag list.');
+                        await this.fetchTags();
+                    }
+                    
+                } catch (error) {
+                    console.error('Error updating tag:', error);
+                    if (error.message.includes('404')) {
+                        alert('Tag update endpoint not found or tag does not exist. Please check the API configuration.');
+                        await this.fetchTags();
+                    } else if (error.message.includes('401')) {
+                        alert('Authentication error. Please log in again.');
+                        window.location.href = '{{ route('login') }}';
+                    } else {
+                        alert(`Failed to update tag: ${error.message}`);
+                    }
+                    this.showEditModal = false;
+                } finally {
+                    this.loading = false;
+                }
+            } else {
+                alert('Tag name cannot be empty.');
             }
         },
         
-        deleteTag(id) {
+        async deleteTag(id) {
             if (confirm('Are you sure you want to delete this tag?')) {
-                this.tags = this.tags.filter(t => t.id !== id);
-                this.filterTags();
+                if (!id || !this.isValidTag(id)) {
+                    alert('Tag not found or deleted. Please select a valid tag.');
+                    await this.fetchTags();
+                    return;
+                }
+                try {
+                    this.loading = true;
+                    const headers = {
+                        'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    };
+                    console.log('Delete tag request headers:', headers);
+                    console.log('Deleting tag with ID:', id);
+                    const response = await fetch(`https://api.tickzap.com/api/tags-delete/${id}`, {
+                        method: 'POST',
+                        headers: headers
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Delete tag response:', data);
+                    
+                    // Remove from local array
+                    this.tags = this.tags.filter(t => t.id !== id);
+                    this.filterTags();
+                    
+                } catch (error) {
+                    console.error('Error deleting tag:', error);
+                    if (error.message.includes('404')) {
+                        alert('Tag delete endpoint not found or tag does not exist. Please check the API configuration.');
+                        await this.fetchTags();
+                    } else if (error.message.includes('401')) {
+                        alert('Authentication error. Please log in again.');
+                        window.location.href = '{{ route('login') }}';
+                    } else {
+                        alert(`Failed to delete tag: ${error.message}`);
+                    }
+                } finally {
+                    this.loading = false;
+                }
             }
         }
     }
