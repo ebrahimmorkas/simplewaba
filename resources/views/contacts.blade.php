@@ -625,10 +625,9 @@ function contactsPage() {
         contacts: [],
         filteredContacts: [],
         
-        init() {
-            this.fetchGroups();
-            this.fetchTags();
-            this.fetchContacts();
+        async init() {
+            await Promise.all([this.fetchGroups(), this.fetchTags()]);
+            await this.fetchContacts();
         },
         
         async fetchGroups() {
@@ -643,10 +642,7 @@ function contactsPage() {
                     }
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 console.log('Fetched groups:', data);
                 this.availableGroups = (Array.isArray(data) ? data : data.data || []).map(group => ({
@@ -671,10 +667,7 @@ function contactsPage() {
                     }
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 console.log('Fetched tags:', data);
                 this.availableTags = (Array.isArray(data) ? data : data.data || data.tags || []).map(tag => ({
@@ -703,26 +696,17 @@ function contactsPage() {
                     }
                 });
 
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 console.log('Fetched contacts:', data);
                 
-                // Map API response to match the expected contact structure
                 this.contacts = (Array.isArray(data) ? data : data.data || []).map(contact => {
                     const group = this.availableGroups.find(g => g.id === contact.group_id) || { name: '-' };
                     const tags = Array.isArray(contact.tags)
                         ? contact.tags.map(tag => {
-                              if (typeof tag === 'object' && tag.tag_name) {
-                                  return tag.tag_name;
-                              } else if (typeof tag === 'number' || typeof tag === 'string') {
-                                  const foundTag = this.availableTags.find(t => t.id == tag);
-                                  return foundTag ? foundTag.name : '-';
-                              }
-                              return '-';
+                              if (typeof tag === 'object' && tag.tag_name) return tag.tag_name;
+                              const foundTag = this.availableTags.find(t => t.id == tag);
+                              return foundTag ? foundTag.name : '-';
                           }).filter(tag => tag !== '-')
                         : [];
                     
@@ -783,15 +767,11 @@ function contactsPage() {
         },
         
         nextPage() {
-            if (this.currentPage < this.totalPages) {
-                this.currentPage++;
-            }
+            if (this.currentPage < this.totalPages) this.currentPage++;
         },
         
         previousPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--;
-            }
+            if (this.currentPage > 1) this.currentPage--;
         },
         
         addNewContact() {
@@ -844,27 +824,22 @@ function contactsPage() {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 };
-                
+                const body = {
+                    name: this.editingContact.name.trim(),
+                    mobile: this.editingContact.mobile.trim(),
+                    group_id: this.editingContact.group_id,
+                    tags: this.editingContact.tag_ids
+                };
+
                 if (this.isEditing) {
                     // Update existing contact
-                    console.log('Update contact request headers:', headers);
-                    console.log('Updating contact with ID:', this.editingContact.id);
-                    console.log('Update contact request body:', {
-                        name: this.editingContact.name.trim(),
-                        mobile: this.editingContact.mobile.trim(),
-                        group_id: this.editingContact.group_id,
-                        tags: this.editingContact.tag_ids
-                    });
+                    console.log('Updating contact ID:', this.editingContact.id);
+                    console.log('Update request body:', body);
                     
                     const response = await fetch(`https://api.tickzap.com/api/contacts-update/${this.editingContact.id}`, {
                         method: 'POST',
                         headers: headers,
-                        body: JSON.stringify({
-                            name: this.editingContact.name.trim(),
-                            mobile: this.editingContact.mobile.trim(),
-                            group_id: this.editingContact.group_id,
-                            tags: this.editingContact.tag_ids
-                        })
+                        body: JSON.stringify(body)
                     });
 
                     if (!response.ok) {
@@ -875,7 +850,6 @@ function contactsPage() {
                     const data = await response.json();
                     console.log('Update contact response:', data);
                     
-                    // Normalize response
                     const updatedContact = {
                         id: this.editingContact.id,
                         name: data.name || this.editingContact.name.trim(),
@@ -894,31 +868,18 @@ function contactsPage() {
                     if (index !== -1) {
                         this.contacts[index] = updatedContact;
                         this.contacts = [...this.contacts];
-                        this.showContactModal = false;
-                        this.filterContacts();
                     } else {
                         console.error('Contact not found in local array:', this.editingContact.id);
                         await this.fetchContacts();
                     }
                 } else {
                     // Add new contact
-                    console.log('Add contact request headers:', headers);
-                    console.log('Add contact request body:', {
-                        name: this.editingContact.name.trim(),
-                        mobile: this.editingContact.mobile.trim(),
-                        group_id: this.editingContact.group_id,
-                        tags: this.editingContact.tag_ids
-                    });
+                    console.log('Adding new contact:', body);
                     
                     const response = await fetch('https://api.tickzap.com/api/contacts', {
                         method: 'POST',
                         headers: headers,
-                        body: JSON.stringify({
-                            name: this.editingContact.name.trim(),
-                            mobile: this.editingContact.mobile.trim(),
-                            group_id: this.editingContact.group_id,
-                            tags: this.editingContact.tag_ids
-                        })
+                        body: JSON.stringify(body)
                     });
 
                     if (!response.ok) {
@@ -948,13 +909,12 @@ function contactsPage() {
                         await this.fetchContacts();
                     } else {
                         this.contacts = [...this.contacts, newContact];
-                        this.filterContacts();
                         this.currentPage = this.totalPages;
                     }
-
-                    this.showContactModal = false;
                 }
-                
+
+                this.showContactModal = false;
+                this.filterContacts();
                 this.editingContact = { id: null, name: '', mobile: '', group_id: '', group_name: '', tag_ids: [], tags: [] };
                 
             } catch (error) {
@@ -964,7 +924,7 @@ function contactsPage() {
                     await this.fetchContacts();
                 } else if (error.message.includes('401')) {
                     alert('Authentication error. Please log in again.');
-                    window.location.href = '{{ route('login') }}';
+                    window.location.href = '{{ route("login") }}';
                 } else {
                     alert(`Failed to save contact: ${error.message}`);
                 }
@@ -975,7 +935,7 @@ function contactsPage() {
         
         async deleteContact(id) {
             if (!id || !this.isValidContact(id)) {
-                alert('Contact not found or deleted. Please select a valid contact.');
+                alert('Contact not found or already deleted. Please select a valid contact.');
                 await this.fetchContacts();
                 return;
             }
@@ -987,8 +947,7 @@ function contactsPage() {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     };
-                    console.log('Delete contact request headers:', headers);
-                    console.log('Deleting contact with ID:', id);
+                    console.log('Deleting contact ID:', id);
                     
                     const response = await fetch(`https://api.tickzap.com/api/contacts-delete/${id}`, {
                         method: 'POST',
@@ -1009,11 +968,11 @@ function contactsPage() {
                 } catch (error) {
                     console.error('Error deleting contact:', error);
                     if (error.message.includes('404')) {
-                        alert('Contact delete endpoint not found or contact does not exist. Please check the API configuration.');
+                        alert('Contact not found or already deleted. Refreshing contact list.');
                         await this.fetchContacts();
                     } else if (error.message.includes('401')) {
                         alert('Authentication error. Please log in again.');
-                        window.location.href = '{{ route('login') }}';
+                        window.location.href = '{{ route("login") }}';
                     } else {
                         alert(`Failed to delete contact: ${error.message}`);
                     }
@@ -1055,18 +1014,14 @@ function contactsPage() {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 };
-                console.log('Update tags request headers:', headers);
+                const body = { tags: this.editingContact.tag_ids };
                 console.log('Updating tags for contact ID:', this.editingContact.id);
-                console.log('Update tags request body:', {
-                    tags: this.editingContact.tag_ids
-                });
+                console.log('Update tags request body:', body);
                 
                 const response = await fetch(`https://api.tickzap.com/api/contacts-update/${this.editingContact.id}`, {
                     method: 'POST',
                     headers: headers,
-                    body: JSON.stringify({
-                        tags: this.editingContact.tag_ids
-                    })
+                    body: JSON.stringify(body)
                 });
 
                 if (!response.ok) {
@@ -1105,11 +1060,11 @@ function contactsPage() {
             } catch (error) {
                 console.error('Error updating contact tags:', error);
                 if (error.message.includes('404')) {
-                    alert('Contact update endpoint not found or contact does not exist. Please check the API configuration.');
+                    alert('Contact not found or already deleted. Refreshing contact list.');
                     await this.fetchContacts();
                 } else if (error.message.includes('401')) {
                     alert('Authentication error. Please log in again.');
-                    window.location.href = '{{ route('login') }}';
+                    window.location.href = '{{ route("login") }}';
                 } else {
                     alert(`Failed to update contact tags: ${error.message}`);
                 }
