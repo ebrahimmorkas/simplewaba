@@ -42,7 +42,6 @@
                           x-transition:leave-start="opacity-100 transform translate-x-0"
                           x-transition:leave-end="opacity-0 transform translate-x-2"
                           class="text-gray-300 group-hover:text-white">Dashboard</span>
-                    <!-- Tooltip for collapsed state -->
                     <div x-show="!sidebarOpen" 
                          class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                         Dashboard
@@ -60,7 +59,6 @@
                           x-transition:leave-start="opacity-100 transform translate-x-0"
                           x-transition:leave-end="opacity-0 transform translate-x-2"
                           class="text-gray-300 group-hover:text-white">Messages</span>
-                    <!-- Tooltip for collapsed state -->
                     <div x-show="!sidebarOpen" 
                          class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                         Messages
@@ -85,8 +83,6 @@
                         <i x-show="sidebarOpen" 
                            :class="contactsOpen ? 'rotate-180' : ''" 
                            class="fas fa-chevron-down transition-transform duration-200"></i>
-                        
-                        <!-- Tooltip for collapsed state -->
                         <div x-show="!sidebarOpen" 
                              class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                             Contacts
@@ -120,15 +116,7 @@
                 <!-- Templates -->
                 <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                     <i class="fas fa-file-alt w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Templates</span>
-                    <!-- Tooltip for collapsed state -->
+                    <span x-show="sidebarOpen" class="text-gray-300 group-hover:text-white">Templates</span>
                     <div x-show="!sidebarOpen" 
                          class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                         Templates
@@ -138,15 +126,7 @@
                 <!-- Sent Messages -->
                 <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                     <i class="fas fa-paper-plane w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Sent Messages</span>
-                    <!-- Tooltip for collapsed state -->
+                    <span x-show="sidebarOpen" class="text-gray-300 group-hover:text-white">Sent Messages</span>
                     <div x-show="!sidebarOpen" 
                          class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                         Sent Messages
@@ -156,15 +136,7 @@
                 <!-- Inbox -->
                 <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                     <i class="fas fa-inbox w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Inbox</span>
-                    <!-- Tooltip for collapsed state -->
+                    <span x-show="sidebarOpen" class="text-gray-300 group-hover:text-white">Inbox</span>
                     <div x-show="!sidebarOpen" 
                          class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                         Inbox
@@ -174,15 +146,7 @@
                 <!-- Reports -->
                 <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                     <i class="fas fa-chart-line w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Reports</span>
-                    <!-- Tooltip for collapsed state -->
+                    <span x-show="sidebarOpen" class="text-gray-300 group-hover:text-white">Reports</span>
                     <div x-show="!sidebarOpen" 
                          class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                         Reports
@@ -192,15 +156,7 @@
                 <!-- Settings -->
                 <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                     <i class="fas fa-cog w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Settings</span>
-                    <!-- Tooltip for collapsed state -->
+                    <span x-show="sidebarOpen" class="text-gray-300 group-hover:text-white">Settings</span>
                     <div x-show="!sidebarOpen" 
                          class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                         Settings
@@ -217,7 +173,6 @@
             <div class="flex items-center justify-between px-6 py-4">
                 <!-- Left Section -->
                 <div class="flex items-center space-x-4">
-                    <!-- Hamburger Menu Button (Always Visible) -->
                     <button @click="sidebarOpen = !sidebarOpen" 
                             class="p-2 rounded-lg hover:bg-gray-100/50 transition-colors backdrop-blur-sm">
                         <i class="fas fa-bars text-gray-600 text-lg"></i>
@@ -237,7 +192,9 @@
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
                         <input type="text" 
-                               placeholder="Search..." 
+                               x-model="searchTerm"
+                               @input="filterContacts()"
+                               placeholder="Search contacts..." 
                                class="w-64 pl-10 pr-4 py-2 bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition-all">
                     </div>
 
@@ -264,7 +221,6 @@
                             <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
                         </button>
 
-                        <!-- Dropdown Menu -->
                         <div x-show="profileOpen" 
                              @click.away="profileOpen = false"
                              x-transition:enter="transition ease-out duration-200"
@@ -343,7 +299,6 @@
                                         <i class="fas fa-chevron-down ml-2 text-sm"></i>
                                     </button>
                                     
-                                    <!-- Export Dropdown Menu -->
                                     <div x-show="exportOpen" 
                                          @click.away="exportOpen = false"
                                          x-transition:enter="transition ease-out duration-200"
@@ -381,88 +336,95 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white/30 backdrop-blur-sm divide-y divide-gray-200/50">
-    <!-- Loading State -->
-    <tr x-show="loading">
-        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
-            <div class="flex flex-col items-center">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
-                <p class="text-lg font-medium">Loading contacts...</p>
-            </div>
-        </td>
-    </tr>
-    
-    <!-- Error State -->
-    <tr x-show="error && !loading">
-        <td colspan="5" class="px-6 py-12 text-center text-red-500">
-            <div class="flex flex-col items-center">
-                <i class="fas fa-exclamation-triangle text-4xl text-red-300 mb-4"></i>
-                <p class="text-lg font-medium" x-text="error"></p>
-                <button @click="fetchContacts()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                    Try Again
-                </button>
-            </div>
-        </td>
-    </tr>
-    
-    <!-- Contacts Data -->
-    <template x-for="contact in paginatedContacts" :key="contact.id">
-        <tr x-show="!loading && !error" class="hover:bg-gray-50/50 transition-colors">
-            <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center justify-center">
-                    <div class="flex-shrink-0 h-10 w-10">
-                        <img class="h-10 w-10 rounded-full shadow-md" 
-                             :src="`https://ui-avatars.com/api/?name=${contact.name}&background=22c55e&color=fff`" 
-                             :alt="contact.name">
-                    </div>
-                    <div class="ml-4">
-                        <div class="text-sm font-medium text-gray-900" x-text="contact.name"></div>
-                    </div>
-                </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-900 text-center" x-text="contact.mobile"></td>
-            <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell text-center">
-                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800" x-text="contact.group"></span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
-                <div class="flex flex-wrap gap-1 justify-center">
-                    <template x-for="tag in contact.tags" :key="tag">
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800" x-text="tag"></span>
-                    </template>
-                </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex items-center justify-center space-x-2">
-                    <!-- Edit Button -->
-                    <button @click="editContact(contact)" class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    
-                    <!-- Delete Button -->
-                    <button @click="deleteContact(contact.id)" class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                    
-                    <!-- Manage Tags Button -->
-                    <button @click="manageContactTags(contact)" class="px-3 py-1 text-sm bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-sm" title="Manage Tags">
-                        <i class="fas fa-tags mr-1"></i>
-                        Manage Tags
-                    </button>
-                </div>
-            </td>
-        </tr>
-    </template>
-    
-    <!-- No contacts state -->
-    <tr x-show="!loading && !error && filteredContacts.length === 0">
-        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
-            <div class="flex flex-col items-center">
-                <i class="fas fa-users text-4xl text-gray-300 mb-4"></i>
-                <p class="text-lg font-medium">No contacts found</p>
-                <p class="text-sm">Try adjusting your search criteria</p>
-            </div>
-        </td>
-    </tr>
-</tbody>
+                            <!-- Loading State -->
+                            <tr x-show="loading">
+                                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                    <div class="flex flex-col items-center">
+                                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
+                                        <p class="text-lg font-medium">Loading contacts...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Error State -->
+                            <tr x-show="error && !loading">
+                                <td colspan="5" class="px-6 py-12 text-center text-red-500">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fas fa-exclamation-triangle text-4xl text-red-300 mb-4"></i>
+                                        <p class="text-lg font-medium" x-text="error"></p>
+                                        <button @click="fetchContacts()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                            Try Again
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Contacts Data -->
+                            <template x-for="contact in paginatedContacts" :key="contact.id">
+                                <tr x-show="!loading && !error" class="hover:bg-gray-50/50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center justify-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full shadow-md" 
+                                                     :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(contact.name)}&background=22c55e&color=fff`" 
+                                                     :alt="contact.name">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900" x-text="contact.name"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-900 text-center" x-text="contact.mobile"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell text-center">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800" x-text="contact.group_name"></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+                                        <div class="flex flex-wrap gap-1 justify-center">
+                                            <template x-for="tag in contact.tags" :key="tag">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800" x-text="tag"></span>
+                                            </template>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="flex items-center justify-center space-x-2">
+                                            <button @click="editContact(contact)" 
+                                                    :disabled="!contact.id || !isValidContact(contact.id)"
+                                                    class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors" 
+                                                    :class="{'opacity-50 cursor-not-allowed': !contact.id || !isValidContact(contact.id)}"
+                                                    title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button @click="deleteContact(contact.id)" 
+                                                    :disabled="!contact.id || !isValidContact(contact.id)"
+                                                    class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors" 
+                                                    :class="{'opacity-50 cursor-not-allowed': !contact.id || !isValidContact(contact.id)}"
+                                                    title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            <button @click="manageContactTags(contact)" 
+                                                    :disabled="!contact.id || !isValidContact(contact.id)"
+                                                    class="px-3 py-1 text-sm bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-sm" 
+                                                    :class="{'opacity-50 cursor-not-allowed': !contact.id || !isValidContact(contact.id)}"
+                                                    title="Manage Tags">
+                                                <i class="fas fa-tags mr-1"></i>
+                                                Manage Tags
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                            
+                            <!-- No contacts state -->
+                            <tr x-show="!loading && !error && filteredContacts.length === 0">
+                                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fas fa-users text-4xl text-gray-300 mb-4"></i>
+                                        <p class="text-lg font-medium">No contacts found</p>
+                                        <p class="text-sm">Try adjusting your search criteria</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
 
@@ -483,7 +445,7 @@
                                 Page <span x-text="currentPage"></span> of <span x-text="totalPages"></span>
                             </span>
                             <button @click="nextPage()" 
-                                    :disabled="currentPage === totalPages"
+                                    :disabled="currentPage === totalPages || totalPages === 0"
                                     class="px-3 py-2 text-sm font-medium text-gray-500 bg-white/50 backdrop-blur-sm border border-gray-300/50 rounded-lg hover:bg-gray-50/50 disabled:opacity-50 transition-all">
                                 Next
                                 <i class="fas fa-chevron-right ml-1"></i>
@@ -540,30 +502,27 @@
                                 <div>
                                     <label for="contactGroup" class="block text-sm font-medium text-gray-700">Group</label>
                                     <select id="contactGroup" 
-                                            x-model="editingContact.group" 
+                                            x-model="editingContact.group_id" 
                                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                                        <option value="VIP Customers">VIP Customers</option>
-                                        <option value="Regular Customers">Regular Customers</option>
-                                        <option value="New Customers">New Customers</option>
-                                        <option value="Business Clients">Business Clients</option>
-                                        <option value="Retail Customers">Retail Customers</option>
-                                        <option value="Wholesale Clients">Wholesale Clients</option>
-                                        <option value="Inactive Customers">Inactive Customers</option>
+                                        <option value="" disabled>Select a group</option>
+                                        <template x-for="group in availableGroups" :key="group.id">
+                                            <option :value="group.id" x-text="group.name"></option>
+                                        </template>
                                     </select>
                                 </div>
                                 
                                 <!-- Tags Checkboxes -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <template x-for="tag in availableTags" :key="tag">
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <template x-for="tag in availableTags" :key="tag.id">
                                             <div class="flex items-center">
                                                 <input type="checkbox" 
-                                                       :id="'tag-' + tag" 
-                                                       :value="tag" 
-                                                       x-model="editingContact.tags" 
+                                                       :id="'tag-' + tag.id" 
+                                                       :value="tag.id" 
+                                                       x-model="editingContact.tag_ids" 
                                                        class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                                                <label :for="'tag-' + tag" class="ml-2 block text-sm text-gray-900" x-text="tag"></label>
+                                                <label :for="'tag-' + tag.id" class="ml-2 block text-sm text-gray-900" x-text="tag.name"></label>
                                             </div>
                                         </template>
                                     </div>
@@ -610,14 +569,14 @@
                             </h3>
                             <div class="mt-4">
                                 <div class="grid grid-cols-2 gap-3">
-                                    <template x-for="tag in availableTags" :key="tag">
+                                    <template x-for="tag in availableTags" :key="tag.id">
                                         <div class="flex items-center">
                                             <input type="checkbox" 
-                                                   :id="'manage-tag-' + tag" 
-                                                   :value="tag" 
-                                                   x-model="editingContact.tags" 
+                                                   :id="'manage-tag-' + tag.id" 
+                                                   :value="tag.id" 
+                                                   x-model="editingContact.tag_ids" 
                                                    class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                                            <label :for="'manage-tag-' + tag" class="ml-2 block text-sm text-gray-900" x-text="tag"></label>
+                                            <label :for="'manage-tag-' + tag.id" class="ml-2 block text-sm text-gray-900" x-text="tag.name"></label>
                                         </div>
                                     </template>
                                 </div>
@@ -650,30 +609,88 @@ function contactsPage() {
         showContactModal: false,
         showTagsModal: false,
         isEditing: false,
+        loading: true,
+        error: null,
         editingContact: {
             id: null,
             name: '',
             mobile: '',
-            group: '',
+            group_id: '',
+            group_name: '',
+            tag_ids: [],
             tags: []
         },
-        availableTags: [
-            'Premium', 'Active', 'New', 'Interested', 'Loyal', 'Potential', 'Inactive', 'VIP', 'Business', 'Retail'
-        ],
+        availableGroups: [],
+        availableTags: [],
         contacts: [],
         filteredContacts: [],
-        loading: true,
-        error: null,
         
         init() {
+            this.fetchGroups();
+            this.fetchTags();
             this.fetchContacts();
+        },
+        
+        async fetchGroups() {
+            try {
+                console.log('Fetching groups...');
+                const response = await fetch('https://api.tickzap.com/api/groups', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched groups:', data);
+                this.availableGroups = (Array.isArray(data) ? data : data.data || []).map(group => ({
+                    id: group.id,
+                    name: group.group_name || group.name || '-'
+                })).filter(group => group.id && group.name !== '-');
+            } catch (error) {
+                console.error('Error fetching groups:', error);
+                this.error = 'Failed to load groups. Please try again.';
+            }
+        },
+        
+        async fetchTags() {
+            try {
+                console.log('Fetching tags...');
+                const response = await fetch('https://api.tickzap.com/api/tags/{{ session("waba_id") }}', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched tags:', data);
+                this.availableTags = (Array.isArray(data) ? data : data.data || data.tags || []).map(tag => ({
+                    id: tag.id,
+                    name: tag.tag_name || tag.name || '-'
+                })).filter(tag => tag.id && tag.name !== '-');
+            } catch (error) {
+                console.error('Error fetching tags:', error);
+                this.error = 'Failed to load tags. Please try again.';
+            }
         },
         
         async fetchContacts() {
             try {
                 this.loading = true;
                 this.error = null;
-                
                 console.log('Fetching contacts...');
                 console.log('Token:', '{{ session("tickzap_token") }}');
                 
@@ -687,49 +704,66 @@ function contactsPage() {
                 });
 
                 console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
-
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
-                console.log('API Response:', data);
+                console.log('Fetched contacts:', data);
                 
                 // Map API response to match the expected contact structure
-                this.contacts = data.data.map(contact => ({
-                    id: contact.id,
-                    name: contact.name || '-',
-                    mobile: contact.mobile,
-                    group: contact.group_name || '-',
-                    tags: contact.tags ? JSON.parse(contact.tags).map(tag => tag.tag_name || '-') : ['-']
-                }));
+                this.contacts = (Array.isArray(data) ? data : data.data || []).map(contact => {
+                    const group = this.availableGroups.find(g => g.id === contact.group_id) || { name: '-' };
+                    const tags = Array.isArray(contact.tags)
+                        ? contact.tags.map(tag => {
+                              if (typeof tag === 'object' && tag.tag_name) {
+                                  return tag.tag_name;
+                              } else if (typeof tag === 'number' || typeof tag === 'string') {
+                                  const foundTag = this.availableTags.find(t => t.id == tag);
+                                  return foundTag ? foundTag.name : '-';
+                              }
+                              return '-';
+                          }).filter(tag => tag !== '-')
+                        : [];
+                    
+                    return {
+                        id: contact.id,
+                        name: contact.name || '-',
+                        mobile: contact.mobile || '-',
+                        group_id: contact.group_id || null,
+                        group_name: group.name,
+                        tag_ids: Array.isArray(contact.tags) ? contact.tags.map(tag => typeof tag === 'object' ? tag.id : tag).filter(id => id && this.availableTags.some(t => t.id == id)) : [],
+                        tags: tags
+                    };
+                }).filter(contact => contact.id && contact.name !== '-' && contact.mobile !== '-');
                 
+                this.filteredContacts = [...this.contacts];
                 console.log('Parsed contacts:', this.contacts);
-                this.filteredContacts = this.contacts;
-                console.log('Filtered contacts:', this.filteredContacts);
                 
             } catch (error) {
                 console.error('Error fetching contacts:', error);
                 this.error = 'Failed to load contacts. Please try again.';
             } finally {
                 this.loading = false;
-                console.log('Loading finished. Contacts count:', this.contacts.length);
             }
+        },
+        
+        isValidContact(id) {
+            return this.contacts.some(c => c.id === id);
         },
         
         filterContacts() {
             if (this.searchTerm === '') {
-                this.filteredContacts = this.contacts;
+                this.filteredContacts = [...this.contacts];
             } else {
                 this.filteredContacts = this.contacts.filter(contact => 
-                    contact.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                    contact.mobile.includes(this.searchTerm) ||
-                    contact.group.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                    contact.tags.some(tag => tag.toLowerCase().includes(this.searchTerm.toLowerCase()))
+                    (contact.name && contact.name.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+                    (contact.mobile && contact.mobile.includes(this.searchTerm)) ||
+                    (contact.group_name && contact.group_name.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+                    (contact.tags && contact.tags.some(tag => tag.toLowerCase().includes(this.searchTerm.toLowerCase())))
                 );
             }
-            this.currentPage = 1; // Reset to first page when searching
+            this.currentPage = 1;
         },
         
         get totalPages() {
@@ -760,68 +794,328 @@ function contactsPage() {
             }
         },
         
-        editContact(contact) {
-            this.isEditing = true;
-            this.editingContact = JSON.parse(JSON.stringify(contact)); // Deep copy
-            this.showContactModal = true;
-        },
-        
         addNewContact() {
             this.isEditing = false;
             this.editingContact = {
                 id: null,
                 name: '',
                 mobile: '',
-                group: 'Regular Customers',
+                group_id: '',
+                group_name: '',
+                tag_ids: [],
                 tags: []
             };
             this.showContactModal = true;
         },
         
-        saveContact() {
+        editContact(contact) {
+            if (!contact.id || !this.isValidContact(contact.id)) {
+                alert('Invalid or deleted contact selected. Please select a valid contact.');
+                this.fetchContacts();
+                return;
+            }
+            this.isEditing = true;
+            this.editingContact = {
+                id: contact.id,
+                name: contact.name || '',
+                mobile: contact.mobile || '',
+                group_id: contact.group_id || '',
+                group_name: contact.group_name || '',
+                tag_ids: [...contact.tag_ids],
+                tags: [...contact.tags]
+            };
+            this.showContactModal = true;
+        },
+        
+        async saveContact() {
             if (this.editingContact.name.trim() === '' || this.editingContact.mobile.trim() === '') {
                 alert('Name and mobile number are required!');
                 return;
             }
-            
-            if (this.isEditing) {
-                // Update existing contact
-                const index = this.contacts.findIndex(c => c.id === this.editingContact.id);
-                if (index !== -1) {
-                    this.contacts[index] = { ...this.editingContact };
-                }
-            } else {
-                // Add new contact
-                const newId = this.contacts.length > 0 ? Math.max(...this.contacts.map(c => c.id)) + 1 : 1;
-                this.contacts.push({
-                    ...this.editingContact,
-                    id: newId
-                });
+            if (!this.editingContact.group_id) {
+                alert('Please select a group.');
+                return;
             }
-            
-            this.showContactModal = false;
-            this.filterContacts();
+
+            try {
+                this.loading = true;
+                const headers = {
+                    'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                };
+                
+                if (this.isEditing) {
+                    // Update existing contact
+                    console.log('Update contact request headers:', headers);
+                    console.log('Updating contact with ID:', this.editingContact.id);
+                    console.log('Update contact request body:', {
+                        name: this.editingContact.name.trim(),
+                        mobile: this.editingContact.mobile.trim(),
+                        group_id: this.editingContact.group_id,
+                        tags: this.editingContact.tag_ids
+                    });
+                    
+                    const response = await fetch(`https://api.tickzap.com/api/contacts-update/${this.editingContact.id}`, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify({
+                            name: this.editingContact.name.trim(),
+                            mobile: this.editingContact.mobile.trim(),
+                            group_id: this.editingContact.group_id,
+                            tags: this.editingContact.tag_ids
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Update contact response:', data);
+                    
+                    // Normalize response
+                    const updatedContact = {
+                        id: this.editingContact.id,
+                        name: data.name || this.editingContact.name.trim(),
+                        mobile: data.mobile || this.editingContact.mobile.trim(),
+                        group_id: data.group_id || this.editingContact.group_id,
+                        group_name: data.group_name || this.availableGroups.find(g => g.id == this.editingContact.group_id)?.name || '-',
+                        tag_ids: Array.isArray(data.tags) ? data.tags.map(tag => typeof tag === 'object' ? tag.id : tag).filter(id => this.availableTags.some(t => t.id == id)) : this.editingContact.tag_ids,
+                        tags: Array.isArray(data.tags) ? data.tags.map(tag => {
+                            if (typeof tag === 'object' && tag.tag_name) return tag.tag_name;
+                            const foundTag = this.availableTags.find(t => t.id == tag);
+                            return foundTag ? foundTag.name : '-';
+                        }).filter(tag => tag !== '-') : this.editingContact.tags
+                    };
+
+                    const index = this.contacts.findIndex(c => c.id === this.editingContact.id);
+                    if (index !== -1) {
+                        this.contacts[index] = updatedContact;
+                        this.contacts = [...this.contacts];
+                        this.showContactModal = false;
+                        this.filterContacts();
+                    } else {
+                        console.error('Contact not found in local array:', this.editingContact.id);
+                        await this.fetchContacts();
+                    }
+                } else {
+                    // Add new contact
+                    console.log('Add contact request headers:', headers);
+                    console.log('Add contact request body:', {
+                        name: this.editingContact.name.trim(),
+                        mobile: this.editingContact.mobile.trim(),
+                        group_id: this.editingContact.group_id,
+                        tags: this.editingContact.tag_ids
+                    });
+                    
+                    const response = await fetch('https://api.tickzap.com/api/contacts', {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify({
+                            name: this.editingContact.name.trim(),
+                            mobile: this.editingContact.mobile.trim(),
+                            group_id: this.editingContact.group_id,
+                            tags: this.editingContact.tag_ids
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Add contact response:', data);
+                    
+                    const newContact = {
+                        id: data.id || (data.contact?.id) || (data.data?.id) || null,
+                        name: data.name || (data.contact?.name) || this.editingContact.name.trim(),
+                        mobile: data.mobile || (data.contact?.mobile) || this.editingContact.mobile.trim(),
+                        group_id: data.group_id || (data.contact?.group_id) || this.editingContact.group_id,
+                        group_name: data.group_name || this.availableGroups.find(g => g.id == this.editingContact.group_id)?.name || '-',
+                        tag_ids: Array.isArray(data.tags) ? data.tags.map(tag => typeof tag === 'object' ? tag.id : tag).filter(id => this.availableTags.some(t => t.id == id)) : this.editingContact.tag_ids,
+                        tags: Array.isArray(data.tags) ? data.tags.map(tag => {
+                            if (typeof tag === 'object' && tag.tag_name) return tag.tag_name;
+                            const foundTag = this.availableTags.find(t => t.id == tag);
+                            return foundTag ? foundTag.name : '-';
+                        }).filter(tag => tag !== '-') : this.editingContact.tags
+                    };
+
+                    if (!newContact.id) {
+                        console.warn('No contact ID in response, fetching contacts...');
+                        await this.fetchContacts();
+                    } else {
+                        this.contacts = [...this.contacts, newContact];
+                        this.filterContacts();
+                        this.currentPage = this.totalPages;
+                    }
+
+                    this.showContactModal = false;
+                }
+                
+                this.editingContact = { id: null, name: '', mobile: '', group_id: '', group_name: '', tag_ids: [], tags: [] };
+                
+            } catch (error) {
+                console.error('Error saving contact:', error);
+                if (error.message.includes('404')) {
+                    alert('Contact endpoint not found. Please check the API configuration.');
+                    await this.fetchContacts();
+                } else if (error.message.includes('401')) {
+                    alert('Authentication error. Please log in again.');
+                    window.location.href = '{{ route('login') }}';
+                } else {
+                    alert(`Failed to save contact: ${error.message}`);
+                }
+            } finally {
+                this.loading = false;
+            }
         },
         
-        deleteContact(id) {
+        async deleteContact(id) {
+            if (!id || !this.isValidContact(id)) {
+                alert('Contact not found or deleted. Please select a valid contact.');
+                await this.fetchContacts();
+                return;
+            }
             if (confirm('Are you sure you want to delete this contact?')) {
-                this.contacts = this.contacts.filter(c => c.id !== id);
-                this.filterContacts();
+                try {
+                    this.loading = true;
+                    const headers = {
+                        'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    };
+                    console.log('Delete contact request headers:', headers);
+                    console.log('Deleting contact with ID:', id);
+                    
+                    const response = await fetch(`https://api.tickzap.com/api/contacts-delete/${id}`, {
+                        method: 'POST',
+                        headers: headers
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Delete contact response:', data);
+                    
+                    this.contacts = this.contacts.filter(c => c.id !== id);
+                    this.filterContacts();
+                    
+                } catch (error) {
+                    console.error('Error deleting contact:', error);
+                    if (error.message.includes('404')) {
+                        alert('Contact delete endpoint not found or contact does not exist. Please check the API configuration.');
+                        await this.fetchContacts();
+                    } else if (error.message.includes('401')) {
+                        alert('Authentication error. Please log in again.');
+                        window.location.href = '{{ route('login') }}';
+                    } else {
+                        alert(`Failed to delete contact: ${error.message}`);
+                    }
+                } finally {
+                    this.loading = false;
+                }
             }
         },
         
         manageContactTags(contact) {
-            this.editingContact = JSON.parse(JSON.stringify(contact)); // Deep copy
+            if (!contact.id || !this.isValidContact(contact.id)) {
+                alert('Invalid or deleted contact selected. Please select a valid contact.');
+                this.fetchContacts();
+                return;
+            }
+            this.editingContact = {
+                id: contact.id,
+                name: contact.name || '',
+                mobile: contact.mobile || '',
+                group_id: contact.group_id || '',
+                group_name: contact.group_name || '',
+                tag_ids: [...contact.tag_ids],
+                tags: [...contact.tags]
+            };
             this.showTagsModal = true;
         },
         
-        updateContactTags() {
-            const index = this.contacts.findIndex(c => c.id === this.editingContact.id);
-            if (index !== -1) {
-                this.contacts[index].tags = [...this.editingContact.tags];
+        async updateContactTags() {
+            if (!this.editingContact.id || !this.isValidContact(this.editingContact.id)) {
+                alert('Contact not found or deleted. Please select a valid contact.');
+                this.showTagsModal = false;
+                await this.fetchContacts();
+                return;
             }
-            this.showTagsModal = false;
-            this.filterContacts();
+            try {
+                this.loading = true;
+                const headers = {
+                    'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                };
+                console.log('Update tags request headers:', headers);
+                console.log('Updating tags for contact ID:', this.editingContact.id);
+                console.log('Update tags request body:', {
+                    tags: this.editingContact.tag_ids
+                });
+                
+                const response = await fetch(`https://api.tickzap.com/api/contacts-update/${this.editingContact.id}`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        tags: this.editingContact.tag_ids
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
+                }
+
+                const data = await response.json();
+                console.log('Update tags response:', data);
+                
+                const updatedContact = {
+                    id: this.editingContact.id,
+                    name: this.contacts.find(c => c.id === this.editingContact.id)?.name || this.editingContact.name,
+                    mobile: this.contacts.find(c => c.id === this.editingContact.id)?.mobile || this.editingContact.mobile,
+                    group_id: this.contacts.find(c => c.id === this.editingContact.id)?.group_id || this.editingContact.group_id,
+                    group_name: this.contacts.find(c => c.id === this.editingContact.id)?.group_name || this.editingContact.group_name,
+                    tag_ids: Array.isArray(data.tags) ? data.tags.map(tag => typeof tag === 'object' ? tag.id : tag).filter(id => this.availableTags.some(t => t.id == id)) : this.editingContact.tag_ids,
+                    tags: Array.isArray(data.tags) ? data.tags.map(tag => {
+                        if (typeof tag === 'object' && tag.tag_name) return tag.tag_name;
+                        const foundTag = this.availableTags.find(t => t.id == tag);
+                        return foundTag ? foundTag.name : '-';
+                    }).filter(tag => tag !== '-') : this.editingContact.tags
+                };
+
+                const index = this.contacts.findIndex(c => c.id === this.editingContact.id);
+                if (index !== -1) {
+                    this.contacts[index] = updatedContact;
+                    this.contacts = [...this.contacts];
+                    this.showTagsModal = false;
+                    this.filterContacts();
+                } else {
+                    console.error('Contact not found in local array:', this.editingContact.id);
+                    await this.fetchContacts();
+                }
+                
+            } catch (error) {
+                console.error('Error updating contact tags:', error);
+                if (error.message.includes('404')) {
+                    alert('Contact update endpoint not found or contact does not exist. Please check the API configuration.');
+                    await this.fetchContacts();
+                } else if (error.message.includes('401')) {
+                    alert('Authentication error. Please log in again.');
+                    window.location.href = '{{ route('login') }}';
+                } else {
+                    alert(`Failed to update contact tags: ${error.message}`);
+                }
+            } finally {
+                this.loading = false;
+            }
         }
     }
 }

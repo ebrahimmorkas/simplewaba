@@ -9,7 +9,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Sample data - replace with actual database queries or API calls
         $stats = [
             'total_messages' => 12345,
             'total_sent' => 8234,
@@ -49,46 +48,95 @@ class DashboardController extends Controller
 
     public function contacts()
     {
-        // Sample contacts data - replace with actual database queries or API calls
-        $contacts = [
-            [
-                'id' => 1,
-                'name' => 'John Doe',
-                'mobile' => '+1234567890',
-                'group' => 'VIP Customers',
-                'tags' => ['Premium', 'Active']
-            ],
-            [
-                'id' => 2,
-                'name' => 'Jane Smith',
-                'mobile' => '+0987654321',
-                'group' => 'Regular Customers',
-                'tags' => ['New', 'Interested']
-            ],
-            [
-                'id' => 3,
-                'name' => 'Mike Johnson',
-                'mobile' => '+1122334455',
-                'group' => 'VIP Customers',
-                'tags' => ['Premium', 'Loyal']
-            ],
-            [
-                'id' => 4,
-                'name' => 'Sarah Wilson',
-                'mobile' => '+5566778899',
-                'group' => 'Regular Customers',
-                'tags' => ['Active']
-            ],
-            [
-                'id' => 5,
-                'name' => 'David Brown',
-                'mobile' => '+9988776655',
-                'group' => 'New Customers',
-                'tags' => ['New', 'Potential']
-            ],
-        ];
+        try {
+            $response = Http::withToken(session('tickzap_token'))
+                ->get('https://api.tickzap.com/api/contacts');
 
-        return view('contacts', compact('contacts'));
+            if ($response->successful()) {
+                $contacts = $response->json('data', []);
+                return view('contacts', compact('contacts'));
+            } else {
+                return view('contacts', ['contacts' => [], 'error' => 'Failed to fetch contacts']);
+            }
+        } catch (\Exception $e) {
+            return view('contacts', ['contacts' => [], 'error' => 'Error connecting to API']);
+        }
+    }
+
+    public function storeContact(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'mobile' => 'required|string|max:20',
+            'group_id' => 'required|integer',
+            'tags' => 'sometimes|array',
+            'tags.*' => 'integer'
+        ]);
+
+        try {
+            $response = Http::withToken(session('tickzap_token'))
+                ->post('https://api.tickzap.com/api/contacts', [
+                    'name' => $request->name,
+                    'mobile' => $request->mobile,
+                    'group_id' => $request->group_id,
+                    'tags' => $request->tags ?? []
+                ]);
+
+            if ($response->successful()) {
+                return response()->json($response->json(), 201);
+            } else {
+                return response()->json(['error' => 'Failed to create contact', 'details' => $response->json()], $response->status());
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error connecting to API', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateContact(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'mobile' => 'sometimes|string|max:20',
+            'group_id' => 'sometimes|integer',
+            'tags' => 'sometimes|array',
+            'tags.*' => 'integer'
+        ]);
+
+        try {
+            $data = array_filter([
+                'name' => $request->name,
+                'mobile' => $request->mobile,
+                'group_id' => $request->group_id,
+                'tags' => $request->tags
+            ], fn($value) => !is_null($value));
+
+            $response = Http::withToken(session('tickzap_token'))
+                ->post("https://api.tickzap.com/api/contacts-update/{$id}", $data);
+
+            if ($response->successful()) {
+                return response()->json($response->json());
+            } else {
+                return response()->json(['error' => 'Failed to update contact', 'details' => $response->json()], $response->status());
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error connecting to API', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteContact($id)
+    {
+        try {
+            $response = Http::withToken(session('tickzap_token'))
+                ->post("https://api.tickzap.com/api/contacts-delete/{$id}");
+
+            if ($response->successful()) {
+                return response()->json(['message' => 'Contact deleted successfully']);
+            } else {
+                return response()->json(['error' => 'Failed to delete contact', 'details' => $response->json()], $response->status());
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error connecting to API', 'details' => $e->getMessage()], 500);
+        }
     }
 
     public function groups()
@@ -172,20 +220,81 @@ class DashboardController extends Controller
 
     public function tags()
     {
-        // Sample tags data - replace with actual database queries or API calls
-        $tags = [
-            ['id' => 1, 'name' => 'Premium'],
-            ['id' => 2, 'name' => 'Active'],
-            ['id' => 3, 'name' => 'New'],
-            ['id' => 4, 'name' => 'Interested'],
-            ['id' => 5, 'name' => 'Loyal'],
-            ['id' => 6, 'name' => 'Potential'],
-            ['id' => 7, 'name' => 'Inactive'],
-            ['id' => 8, 'name' => 'VIP'],
-            ['id' => 9, 'name' => 'Business'],
-            ['id' => 10, 'name' => 'Retail']
-        ];
+        try {
+            $waba_id = session('waba_id', '378243102032704');
+            $response = Http::withToken(session('tickzap_token'))
+                ->get("https://api.tickzap.com/api/tags/{$waba_id}");
 
-        return view('tags', compact('tags'));
+            if ($response->successful()) {
+                $tags = $response->json('data', []);
+                return view('tags', compact('tags'));
+            } else {
+                return view('tags', ['tags' => [], 'error' => 'Failed to fetch tags']);
+            }
+        } catch (\Exception $e) {
+            return view('tags', ['tags' => [], 'error' => 'Error connecting to API']);
+        }
+    }
+
+    public function storeTag(Request $request)
+    {
+        $request->validate([
+            'tag_name' => 'required|string|max:255',
+            'whatsapp_business_account_id' => 'sometimes|string'
+        ]);
+
+        try {
+            $response = Http::withToken(session('tickzap_token'))
+                ->post('https://api.tickzap.com/api/tags', [
+                    'tag_name' => $request->tag_name,
+                    'whatsapp_business_account_id' => $request->whatsapp_business_account_id ?? '378243102032704'
+                ]);
+
+            if ($response->successful()) {
+                return response()->json($response->json(), 201);
+            } else {
+                return response()->json(['error' => 'Failed to create tag', 'details' => $response->json()], $response->status());
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error connecting to API', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateTag(Request $request, $id)
+    {
+        $request->validate([
+            'tag_name' => 'required|string|max:255'
+        ]);
+
+        try {
+            $response = Http::withToken(session('tickzap_token'))
+                ->post("https://api.tickzap.com/api/tags-update/{$id}", [
+                    'tag_name' => $request->tag_name
+                ]);
+
+            if ($response->successful()) {
+                return response()->json($response->json());
+            } else {
+                return response()->json(['error' => 'Failed to update tag', 'details' => $response->json()], $response->status());
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error connecting to API', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteTag($id)
+    {
+        try {
+            $response = Http::withToken(session('tickzap_token'))
+                ->post("https://api.tickzap.com/api/tags-delete/{$id}");
+
+            if ($response->successful()) {
+                return response()->json(['message' => 'Tag deleted successfully']);
+            } else {
+                return response()->json(['error' => 'Failed to delete tag', 'details' => $response->json()], $response->status());
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error connecting to API', 'details' => $e->getMessage()], 500);
+        }
     }
 }
