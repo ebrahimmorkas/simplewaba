@@ -300,12 +300,20 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="flex items-center justify-center space-x-4">
                                             <!-- Edit Button -->
-                                            <button @click="editGroup(group)" class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                                            <button @click="editGroup(group)" 
+                                                    :disabled="!group.id || !isValidGroup(group.id)"
+                                                    class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors" 
+                                                    :class="{'opacity-50 cursor-not-allowed': !group.id || !isValidGroup(group.id)}"
+                                                    title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             
                                             <!-- Delete Button -->
-                                            <button @click="deleteGroup(group.id)" class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+                                            <button @click="deleteGroup(group.id)" 
+                                                    :disabled="!group.id || !isValidGroup(group.id)"
+                                                    class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors" 
+                                                    :class="{'opacity-50 cursor-not-allowed': !group.id || !isValidGroup(group.id)}"
+                                                    title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
@@ -494,8 +502,11 @@ function groupsPage() {
 
                 const data = await response.json();
                 console.log('Fetched groups:', data); // Debug API response
-                this.groups = Array.isArray(data) ? data : data.groups || data.data || [];
-                this.filteredGroups = this.groups;
+                // Ensure only valid groups with id and group_name
+                this.groups = (Array.isArray(data) ? data : data.data || data.groups || []).filter(group => 
+                    group && group.id && typeof group.id === 'number' && group.group_name
+                );
+                this.filteredGroups = [...this.groups]; // Ensure reactivity
                 
             } catch (error) {
                 console.error('Error fetching groups:', error);
@@ -505,12 +516,16 @@ function groupsPage() {
             }
         },
         
+        isValidGroup(id) {
+            return this.groups.some(g => g.id === id);
+        },
+        
         filterGroups() {
             if (this.searchTerm === '') {
-                this.filteredGroups = [...this.groups]; // Create a new array to trigger reactivity
+                this.filteredGroups = [...this.groups]; // Create new array for reactivity
             } else {
                 this.filteredGroups = this.groups.filter(group => 
-                    group.group_name.toLowerCase().includes(this.searchTerm.toLowerCase())
+                    group.group_name && group.group_name.toLowerCase().includes(this.searchTerm.toLowerCase())
                 );
             }
             this.currentPage = 1; // Reset to first page
@@ -547,41 +562,62 @@ function groupsPage() {
         async addGroup() {
             if (this.newGroup.group_name.trim() !== '') {
                 try {
+                    this.loading = true; // Show loading state
+                    const headers = {
+                        'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    };
+                    console.log('Add group request headers:', headers); // Debug headers
+                    console.log('Add group request body:', {
+                        group_name: this.newGroup.group_name.trim(),
+                        whatsapp_business_account_id: '378243102032704'
+                    }); // Debug request body
                     const response = await fetch('https://api.tickzap.com/api/groups', {
                         method: 'POST',
-                        headers: {
-                            'Authorization': 'Bearer {{ session("tickzap_token") }}',
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
+                        headers: headers,
                         body: JSON.stringify({
-                            group_name: this.newGroup.group_name.trim()
+                            group_name: this.newGroup.group_name.trim(),
+                            whatsapp_business_account_id: '378243102032704'
                         })
                     });
 
                     if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
                     }
 
                     const data = await response.json();
                     console.log('Add group response:', data); // Debug API response
                     
-                    // Normalize the group object to ensure it has id and group_name
+                    // Normalize the group object with flexible response handling
                     const newGroup = {
-                        id: data.id || (data.group ? data.group.id : null),
-                        group_name: data.group_name || (data.group ? data.group.group_name : this.newGroup.group_name.trim())
+                        id: data.id || (data.group?.id) || (data.data?.id) || null,
+                        group_name: data.group_name || (data.group?.group_name) || (data.data?.group_name) || this.newGroup.group_name.trim(),
+                        whatsapp_business_account_id: data.whatsapp_business_account_id || (data.group?.whatsapp_business_account_id) || (data.data?.whatsapp_business_account_id) || '378243102032704'
                     };
 
-                    // Add to groups array and trigger UI update
-                    this.groups = [...this.groups, newGroup]; // Create new array for reactivity
+                    // If ID is missing, fetch groups to ensure consistency
+                    if (!newGroup.id) {
+                        console.warn('No group ID in response, fetching groups...');
+                        await this.fetchGroups();
+                    } else {
+                        // Add to groups array and trigger UI update
+                        this.groups = [...this.groups, newGroup]; // Ensure reactivity
+                        this.filterGroups();
+                    }
+
                     this.newGroup.group_name = '';
                     this.showAddModal = false;
-                    this.filterGroups(); // Refresh filtered groups
-                    this.currentPage = this.totalPages; // Go to last page to show new group
+                    this.currentPage = this.totalPages; // Go to last page
                     
                 } catch (error) {
                     console.error('Error adding group:', error);
-                    alert('Failed to add group. Please try again.');
+                    alert(`Failed to add group: ${error.message}`);
+                    // Attempt to fetch groups to sync state
+                    await this.fetchGroups();
+                } finally {
+                    this.loading = false;
                 }
             } else {
                 alert('Group name cannot be empty.');
@@ -589,27 +625,46 @@ function groupsPage() {
         },
         
         editGroup(group) {
-            this.editingGroup = { ...group };
+            if (!group || !group.id || !this.isValidGroup(group.id)) {
+                alert('Invalid or deleted group selected. Please select a valid group.');
+                this.fetchGroups();
+                return;
+            }
+            this.editingGroup = {
+                id: group.id,
+                group_name: group.group_name || ''
+            };
             this.showEditModal = true;
         },
         
         async updateGroup() {
             if (this.editingGroup.group_name.trim() !== '') {
+                if (!this.editingGroup.id || !this.isValidGroup(this.editingGroup.id)) {
+                    alert('Group not found or deleted. Please select a valid group.');
+                    this.showEditModal = false;
+                    await this.fetchGroups();
+                    return;
+                }
                 try {
-                    const response = await fetch(`https://api.tickzap.com/api/groups/${this.editingGroup.id}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': 'Bearer {{ session("tickzap_token") }}',
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
+                    this.loading = true; // Show loading state
+                    const headers = {
+                        'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    };
+                    console.log('Update group request headers:', headers); // Debug headers
+                    console.log('Updating group with ID:', this.editingGroup.id); // Debug group ID
+                    const response = await fetch(`https://api.tickzap.com/api/groups-update/${this.editingGroup.id}`, {
+                        method: 'POST',
+                        headers: headers,
                         body: JSON.stringify({
                             group_name: this.editingGroup.group_name.trim()
                         })
                     });
 
                     if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
                     }
 
                     const data = await response.json();
@@ -618,8 +673,13 @@ function groupsPage() {
                     // Normalize the updated group object
                     const updatedGroup = {
                         id: this.editingGroup.id,
-                        group_name: data.group_name || (data.group ? data.group.group_name : this.editingGroup.group_name.trim())
+                        group_name: data.group_name || (data.group ? data.group.group_name : this.editingGroup.group_name.trim()),
+                        whatsapp_business_account_id: data.whatsapp_business_account_id || this.groups.find(g => g.id === this.editingGroup.id)?.whatsapp_business_account_id
                     };
+
+                    if (!updatedGroup.id || !updatedGroup.group_name) {
+                        throw new Error('Invalid group data returned from server');
+                    }
 
                     // Update local array
                     const index = this.groups.findIndex(g => g.id === this.editingGroup.id);
@@ -628,11 +688,26 @@ function groupsPage() {
                         this.groups = [...this.groups]; // Trigger reactivity
                         this.showEditModal = false;
                         this.filterGroups();
+                    } else {
+                        console.error('Group not found in local array:', this.editingGroup.id);
+                        alert('Group not found locally. Refreshing group list.');
+                        await this.fetchGroups();
                     }
                     
                 } catch (error) {
                     console.error('Error updating group:', error);
-                    alert('Failed to update group. Please try again.');
+                    if (error.message.includes('404')) {
+                        alert('Group update endpoint not found or group does not exist. Please check the API configuration.');
+                        await this.fetchGroups();
+                    } else if (error.message.includes('401')) {
+                        alert('Authentication error. Please log in again.');
+                        window.location.href = '{{ route('login') }}';
+                    } else {
+                        alert(`Failed to update group: ${error.message}`);
+                    }
+                    this.showEditModal = false;
+                } finally {
+                    this.loading = false;
                 }
             } else {
                 alert('Group name cannot be empty.');
@@ -641,26 +716,50 @@ function groupsPage() {
         
         async deleteGroup(id) {
             if (confirm('Are you sure you want to delete this group?')) {
+                if (!id || !this.isValidGroup(id)) {
+                    alert('Group not found or deleted. Please select a valid group.');
+                    await this.fetchGroups();
+                    return;
+                }
                 try {
-                    const response = await fetch(`https://api.tickzap.com/api/groups/${id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Authorization': 'Bearer {{ session("tickzap_token") }}',
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        }
+                    this.loading = true; // Show loading state
+                    const headers = {
+                        'Authorization': 'Bearer {{ session("tickzap_token") }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    };
+                    console.log('Delete group request headers:', headers); // Debug headers
+                    console.log('Deleting group with ID:', id); // Debug group ID
+                    const response = await fetch(`https://api.tickzap.com/api/groups-delete/${id}`, {
+                        method: 'POST',
+                        headers: headers
                     });
 
                     if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || 'Unknown error'}`);
                     }
 
+                    const data = await response.json();
+                    console.log('Delete group response:', data); // Debug API response
+                    
+                    // Remove from local array
                     this.groups = this.groups.filter(g => g.id !== id);
                     this.filterGroups();
                     
                 } catch (error) {
                     console.error('Error deleting group:', error);
-                    alert('Failed to delete group. Please try again.');
+                    if (error.message.includes('404')) {
+                        alert('Group delete endpoint not found or group does not exist. Please check the API configuration.');
+                        await this.fetchGroups();
+                    } else if (error.message.includes('401')) {
+                        alert('Authentication error. Please log in again.');
+                        window.location.href = '{{ route('login') }}';
+                    } else {
+                        alert(`Failed to delete group: ${error.message}`);
+                    }
+                } finally {
+                    this.loading = false;
                 }
             }
         }

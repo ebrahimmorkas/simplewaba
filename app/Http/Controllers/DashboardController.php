@@ -98,7 +98,7 @@ class DashboardController extends Controller
                 ->get('https://api.tickzap.com/api/groups');
 
             if ($response->successful()) {
-                $groups = $response->json();
+                $groups = $response->json('data', []);
                 return view('groups', compact('groups'));
             } else {
                 return view('groups', ['groups' => [], 'error' => 'Failed to fetch groups']);
@@ -111,22 +111,24 @@ class DashboardController extends Controller
     public function storeGroup(Request $request)
     {
         $request->validate([
-            'group_name' => 'required|string|max:255'
+            'group_name' => 'required|string|max:255',
+            'whatsapp_business_account_id' => 'sometimes|string'
         ]);
 
         try {
             $response = Http::withToken(session('tickzap_token'))
                 ->post('https://api.tickzap.com/api/groups', [
-                    'group_name' => $request->group_name
+                    'group_name' => $request->group_name,
+                    'whatsapp_business_account_id' => $request->whatsapp_business_account_id ?? '378243102032704'
                 ]);
 
             if ($response->successful()) {
                 return response()->json($response->json(), 201);
             } else {
-                return response()->json(['error' => 'Failed to create group'], $response->status());
+                return response()->json(['error' => 'Failed to create group', 'details' => $response->json()], $response->status());
             }
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error connecting to API'], 500);
+            return response()->json(['error' => 'Error connecting to API', 'details' => $e->getMessage()], 500);
         }
     }
 
@@ -138,17 +140,17 @@ class DashboardController extends Controller
 
         try {
             $response = Http::withToken(session('tickzap_token'))
-                ->put("https://api.tickzap.com/api/groups/{$id}", [
+                ->post("https://api.tickzap.com/api/groups-update/{$id}", [
                     'group_name' => $request->group_name
                 ]);
 
             if ($response->successful()) {
                 return response()->json($response->json());
             } else {
-                return response()->json(['error' => 'Failed to update group'], $response->status());
+                return response()->json(['error' => 'Failed to update group', 'details' => $response->json()], $response->status());
             }
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error connecting to API'], 500);
+            return response()->json(['error' => 'Error connecting to API', 'details' => $e->getMessage()], 500);
         }
     }
 
@@ -156,15 +158,15 @@ class DashboardController extends Controller
     {
         try {
             $response = Http::withToken(session('tickzap_token'))
-                ->delete("https://api.tickzap.com/api/groups/{$id}");
+                ->post("https://api.tickzap.com/api/groups-delete/{$id}");
 
             if ($response->successful()) {
                 return response()->json(['message' => 'Group deleted successfully']);
             } else {
-                return response()->json(['error' => 'Failed to delete group'], $response->status());
+                return response()->json(['error' => 'Failed to delete group', 'details' => $response->json()], $response->status());
             }
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error connecting to API'], 500);
+            return response()->json(['error' => 'Error connecting to API', 'details' => $e->getMessage()], 500);
         }
     }
 
