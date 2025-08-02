@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex h-screen w-screen" x-data="tagsPage()">
+<div class="flex h-screen w-screen" x-data="dashboardPage()">
     <!-- Sidebar -->
     <div :class="sidebarOpen ? 'w-64' : 'w-16'" 
          class="bg-gradient-to-b from-gray-900 to-gray-800 text-white transition-all duration-300 ease-in-out shadow-2xl relative z-30">
@@ -29,11 +29,11 @@
         </div>
 
         <!-- Navigation Menu -->
-        <nav class="mt-6" x-data="{ contactsOpen: true }">
+        <nav class="mt-6" x-data="{ contactsOpen: false }">
             <div class="px-4 space-y-2">
-                <!-- Dashboard -->
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group">
-                    <i class="fas fa-chart-bar w-5 text-gray-400 group-hover:text-white"></i>
+                <!-- Dashboard - Active -->
+                <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg group">
+                    <i class="fas fa-chart-bar w-5"></i>
                     <span x-show="sidebarOpen" 
                           x-transition:enter="transition ease-out duration-300 delay-75"
                           x-transition:enter-start="opacity-0 transform translate-x-2"
@@ -41,7 +41,7 @@
                           x-transition:leave="transition ease-in duration-200"
                           x-transition:leave-start="opacity-100 transform translate-x-0"
                           x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Dashboard</span>
+                          class="font-medium">Dashboard</span>
                     <!-- Tooltip for collapsed state -->
                     <div x-show="!sidebarOpen" 
                          class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
@@ -67,12 +67,12 @@
                     </div>
                 </a>
                 
-                <!-- Contacts with Dropdown - Active -->
+                <!-- Contacts with Dropdown -->
                 <div class="relative">
                     <button @click="contactsOpen = !contactsOpen" 
-                            class="w-full flex items-center justify-between space-x-3 p-3 rounded-lg bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg group relative">
+                            class="w-full flex items-center justify-between space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-users w-5"></i>
+                            <i class="fas fa-users w-5 text-gray-400 group-hover:text-white"></i>
                             <span x-show="sidebarOpen" 
                                   x-transition:enter="transition ease-out duration-300 delay-75"
                                   x-transition:enter-start="opacity-0 transform translate-x-2"
@@ -80,11 +80,11 @@
                                   x-transition:leave="transition ease-in duration-200"
                                   x-transition:leave-start="opacity-100 transform translate-x-0"
                                   x-transition:leave-end="opacity-0 transform translate-x-2"
-                                  class="font-medium">Contacts</span>
+                                  class="text-gray-300 group-hover:text-white">Contacts</span>
                         </div>
                         <i x-show="sidebarOpen" 
                            :class="contactsOpen ? 'rotate-180' : ''" 
-                           class="fas fa-chevron-down transition-transform duration-200"></i>
+                           class="fas fa-chevron-down text-gray-400 group-hover:text-white transition-transform duration-200"></i>
                         
                         <!-- Tooltip for collapsed state -->
                         <div x-show="!sidebarOpen" 
@@ -110,37 +110,101 @@
                             <i class="fas fa-users w-4 text-gray-400 group-hover:text-white"></i>
                             <span class="text-gray-300 group-hover:text-white text-sm">Groups</span>
                         </a>
-                        <a href="{{ route('tags') }}" class="flex items-center space-x-3 p-2 rounded-lg bg-green-600/50 text-white group">
-                            <i class="fas fa-tags w-4"></i>
-                            <span class="text-sm font-medium">Tags/Segments</span>
+                        <a href="{{ route('tags') }}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-600 transition-colors group">
+                            <i class="fas fa-tags w-4 text-gray-400 group-hover:text-white"></i>
+                            <span class="text-gray-300 group-hover:text-white text-sm">Tags/Segments</span>
                         </a>
                     </div>
                 </div>
                 
-                <!-- Other menu items... (Templates, Sent Messages, etc.) -->
+                <!-- Templates -->
                 <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                     <i class="fas fa-file-alt w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" class="text-gray-300 group-hover:text-white">Templates</span>
+                    <span x-show="sidebarOpen" 
+                          x-transition:enter="transition ease-out duration-300 delay-75"
+                          x-transition:enter-start="opacity-0 transform translate-x-2"
+                          x-transition:enter-end="opacity-100 transform translate-x-0"
+                          x-transition:leave="transition ease-in duration-200"
+                          x-transition:leave-start="opacity-100 transform translate-x-0"
+                          x-transition:leave-end="opacity-0 transform translate-x-2"
+                          class="text-gray-300 group-hover:text-white">Templates</span>
+                    <!-- Tooltip for collapsed state -->
+                    <div x-show="!sidebarOpen" 
+                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                        Templates
+                    </div>
                 </a>
                 
+                <!-- Sent Messages -->
                 <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                     <i class="fas fa-paper-plane w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" class="text-gray-300 group-hover:text-white">Sent Messages</span>
+                    <span x-show="sidebarOpen" 
+                          x-transition:enter="transition ease-out duration-300 delay-75"
+                          x-transition:enter-start="opacity-0 transform translate-x-2"
+                          x-transition:enter-end="opacity-100 transform translate-x-0"
+                          x-transition:leave="transition ease-in duration-200"
+                          x-transition:leave-start="opacity-100 transform translate-x-0"
+                          x-transition:leave-end="opacity-0 transform translate-x-2"
+                          class="text-gray-300 group-hover:text-white">Sent Messages</span>
+                    <!-- Tooltip for collapsed state -->
+                    <div x-show="!sidebarOpen" 
+                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                        Sent Messages
+                    </div>
                 </a>
                 
+                <!-- Inbox -->
                 <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                     <i class="fas fa-inbox w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" class="text-gray-300 group-hover:text-white">Inbox</span>
+                    <span x-show="sidebarOpen" 
+                          x-transition:enter="transition ease-out duration-300 delay-75"
+                          x-transition:enter-start="opacity-0 transform translate-x-2"
+                          x-transition:enter-end="opacity-100 transform translate-x-0"
+                          x-transition:leave="transition ease-in duration-200"
+                          x-transition:leave-start="opacity-100 transform translate-x-0"
+                          x-transition:leave-end="opacity-0 transform translate-x-2"
+                          class="text-gray-300 group-hover:text-white">Inbox</span>
+                    <!-- Tooltip for collapsed state -->
+                    <div x-show="!sidebarOpen" 
+                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                        Inbox
+                    </div>
                 </a>
                 
+                <!-- Reports -->
                 <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                     <i class="fas fa-chart-line w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" class="text-gray-300 group-hover:text-white">Reports</span>
+                    <span x-show="sidebarOpen" 
+                          x-transition:enter="transition ease-out duration-300 delay-75"
+                          x-transition:enter-start="opacity-0 transform translate-x-2"
+                          x-transition:enter-end="opacity-100 transform translate-x-0"
+                          x-transition:leave="transition ease-in duration-200"
+                          x-transition:leave-start="opacity-100 transform translate-x-0"
+                          x-transition:leave-end="opacity-0 transform translate-x-2"
+                          class="text-gray-300 group-hover:text-white">Reports</span>
+                    <!-- Tooltip for collapsed state -->
+                    <div x-show="!sidebarOpen" 
+                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                        Reports
+                    </div>
                 </a>
                 
+                <!-- Settings -->
                 <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
                     <i class="fas fa-cog w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" class="text-gray-300 group-hover:text-white">Settings</span>
+                    <span x-show="sidebarOpen" 
+                          x-transition:enter="transition ease-out duration-300 delay-75"
+                          x-transition:enter-start="opacity-0 transform translate-x-2"
+                          x-transition:enter-end="opacity-100 transform translate-x-0"
+                          x-transition:leave="transition ease-in duration-200"
+                          x-transition:leave-start="opacity-100 transform translate-x-0"
+                          x-transition:leave-end="opacity-0 transform translate-x-2"
+                          class="text-gray-300 group-hover:text-white">Settings</span>
+                    <!-- Tooltip for collapsed state -->
+                    <div x-show="!sidebarOpen" 
+                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                        Settings
+                    </div>
                 </a>
             </div>
         </nav>
@@ -160,8 +224,8 @@
                     </button>
                     
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">Tags Management</h1>
-                        <p class="text-sm text-gray-600">Manage your contact tags and segments</p>
+                        <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+                        <p class="text-sm text-gray-600">Here's what's happening</p>
                     </div>
                 </div>
 
@@ -235,306 +299,489 @@
 
         <!-- Main Content Area -->
         <main class="flex-1 overflow-y-auto p-6 bg-gradient-to-br from-gray-50 to-gray-100">
-            <!-- Tags Table -->
-            <div class="bg-white/80 backdrop-blur-md rounded-xl shadow-xl border border-white/20">
-                <!-- Table Header -->
-                <div class="p-6 border-b border-gray-200/50">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <h2 class="text-xl font-bold text-gray-900">Tags Management</h2>
-                        
-                        <!-- Action Buttons -->
-                        <div class="flex gap-2">
-                            <!-- Add New Tag -->
-                            <button @click="showAddModal = true" class="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg">
-                                <i class="fas fa-plus mr-2"></i>
-                                Add Tag
-                            </button>
+            <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                <!-- Left Side - Stats and Messages (3/4 width) -->
+                <div class="xl:col-span-3 space-y-6">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Total Messages -->
+                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-blue-100 text-sm font-medium">Total Messages</p>
+                                    <p class="text-3xl font-bold">12,345</p>
+                                    <p class="text-blue-100 text-sm mt-1">
+                                        <span class="text-green-300">+12%</span> from last month
+                                    </p>
+                                </div>
+                                <div class="bg-blue-400 bg-opacity-30 rounded-lg p-3">
+                                    <i class="fas fa-comments text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Sent -->
+                        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-green-100 text-sm font-medium">Total Sent</p>
+                                    <p class="text-3xl font-bold">8,234</p>
+                                    <p class="text-green-100 text-sm mt-1">
+                                        <span class="text-blue-300">+8%</span> from last month
+                                    </p>
+                                </div>
+                                <div class="bg-green-400 bg-opacity-30 rounded-lg p-3">
+                                    <i class="fas fa-paper-plane text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Received -->
+                        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-purple-100 text-sm font-medium">Total Received</p>
+                                    <p class="text-3xl font-bold">4,111</p>
+                                    <p class="text-purple-100 text-sm mt-1">
+                                        <span class="text-yellow-300">+15%</span> from last month
+                                    </p>
+                                </div>
+                                <div class="bg-purple-400 bg-opacity-30 rounded-lg p-3">
+                                    <i class="fas fa-inbox text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Templates -->
+                        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-orange-100 text-sm font-medium">Total Templates</p>
+                                    <p class="text-3xl font-bold">45</p>
+                                    <p class="text-orange-100 text-sm mt-1">
+                                        <span class="text-green-300">+3%</span> from last month
+                                    </p>
+                                </div>
+                                <div class="bg-orange-400 bg-opacity-30 rounded-lg p-3">
+                                    <i class="fas fa-file-alt text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messages Table -->
+                    <div class="bg-white/80 backdrop-blur-md rounded-xl shadow-xl border border-white/20">
+                        <!-- Table Header -->
+                        <div class="p-6 border-b border-gray-200/50">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                <h2 class="text-xl font-bold text-gray-900">Messages</h2>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-search text-gray-400"></i>
+                                    </div>
+                                    <input type="text" 
+                                           placeholder="Search messages..." 
+                                           class="w-full sm:w-64 pl-10 pr-4 py-2 bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition-all">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Table Content -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50/50 backdrop-blur-sm border-b border-gray-200/50">
+                                    <tr>
+                                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Display Sender</th>
+                                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Timestamp</th>
+                                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sender/Receiver</th>
+                                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Message Content</th>
+                                        <th class="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white/30 backdrop-blur-sm divide-y divide-gray-200/50">
+                                    <!-- Sample Row 1 -->
+                                    <tr class="hover:bg-gray-50/50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                                Delivered
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">John Doe</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-gray-500 hidden md:table-cell">2024-01-15 10:30 AM</td>
+                                        <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-900">+1234567890</td>
+                                        <td class="px-6 py-4 text-gray-500 hidden lg:table-cell max-w-xs truncate">Hello, how can I help you today?</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div x-data="{ actionOpen: false }" class="relative">
+                                                <button @click="actionOpen = !actionOpen" 
+                                                        class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100/50 transition-colors">
+                                                    <i class="fas fa-ellipsis-h"></i>
+                                                </button>
+                                                <div x-show="actionOpen" 
+                                                     @click.away="actionOpen = false"
+                                                     x-transition
+                                                     class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20 py-2 z-10">
+                                                    <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100/50 transition-colors">
+                                                        <i class="fas fa-eye mr-3 text-gray-400"></i>
+                                                        View Details
+                                                    </a>
+                                                    <a href="#" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50/50 transition-colors">
+                                                        <i class="fas fa-trash mr-3"></i>
+                                                        Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Sample Row 2 -->
+                                    <tr class="hover:bg-gray-50/50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                Sent
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Jane Smith</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-gray-500 hidden md:table-cell">2024-01-15 09:15 AM</td>
+                                        <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-900">+0987654321</td>
+                                        <td class="px-6 py-4 text-gray-500 hidden lg:table-cell max-w-xs truncate">Thank you for your quick response!</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div x-data="{ actionOpen: false }" class="relative">
+                                                <button @click="actionOpen = !actionOpen" 
+                                                        class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100/50 transition-colors">
+                                                    <i class="fas fa-ellipsis-h"></i>
+                                                </button>
+                                                <div x-show="actionOpen" 
+                                                     @click.away="actionOpen = false"
+                                                     x-transition
+                                                     class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20 py-2 z-10">
+                                                    <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100/50 transition-colors">
+                                                        <i class="fas fa-eye mr-3 text-gray-400"></i>
+                                                        View Details
+                                                    </a>
+                                                    <a href="#" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50/50 transition-colors">
+                                                        <i class="fas fa-trash mr-3"></i>
+                                                        Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Sample Row 3 -->
+                                    <tr class="hover:bg-gray-50/50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                                Failed
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Mike Johnson</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-gray-500 hidden md:table-cell">2024-01-15 08:45 AM</td>
+                                        <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-900">+1122334455</td>
+                                        <td class="px-6 py-4 text-gray-500 hidden lg:table-cell max-w-xs truncate">Can you please send me the details?</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div x-data="{ actionOpen: false }" class="relative">
+                                                <button @click="actionOpen = !actionOpen" 
+                                                        class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100/50 transition-colors">
+                                                    <i class="fas fa-ellipsis-h"></i>
+                                                </button>
+                                                <div x-show="actionOpen" 
+                                                     @click.away="actionOpen = false"
+                                                     x-transition
+                                                     class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20 py-2 z-10">
+                                                    <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100/50 transition-colors">
+                                                        <i class="fas fa-eye mr-3 text-gray-400"></i>
+                                                        View Details
+                                                    </a>
+                                                    <a href="#" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50/50 transition-colors">
+                                                        <i class="fas fa-trash mr-3"></i>
+                                                        Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="px-6 py-4 border-t border-gray-200/50 bg-gray-50/30 backdrop-blur-sm">
+                            <div class="flex items-center justify-between">
+                                <div class="text-sm text-gray-700">
+                                    Showing <span class="font-medium">1</span> to <span class="font-medium">3</span> of <span class="font-medium">3</span> results
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white/50 backdrop-blur-sm border border-gray-300/50 rounded-lg hover:bg-gray-50/50 disabled:opacity-50 transition-all" disabled>
+                                        <i class="fas fa-chevron-left mr-1"></i>
+                                        Previous
+                                    </button>
+                                    <span class="px-3 py-2 text-sm font-medium text-gray-700">
+                                        Page 1 of 1
+                                    </span>
+                                    <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white/50 backdrop-blur-sm border border-gray-300/50 rounded-lg hover:bg-gray-50/50 disabled:opacity-50 transition-all" disabled>
+                                        Next
+                                        <i class="fas fa-chevron-right ml-1"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Table Content -->
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-50/50 backdrop-blur-sm border-b border-gray-200/50">
-                            <tr>
-                                <th class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tag Name</th>
-                                <th class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white/30 backdrop-blur-sm divide-y divide-gray-200/50">
-                            <template x-for="tag in paginatedTags" :key="tag.id">
-                                <tr class="hover:bg-gray-50/50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full" 
-                                              :class="{
-                                                'bg-blue-100 text-blue-800': tag.id % 4 === 0,
-                                                'bg-green-100 text-green-800': tag.id % 4 === 1,
-                                                'bg-purple-100 text-purple-800': tag.id % 4 === 2,
-                                                'bg-orange-100 text-orange-800': tag.id % 4 === 3
-                                              }"
-                                              x-text="tag.name"></span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <div class="flex items-center justify-center space-x-4">
-                                            <!-- Edit Button -->
-                                            <button @click="editTag(tag)" class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            
-                                            <!-- Delete Button -->
-                                            <button @click="deleteTag(tag.id)" class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </template>
-                            
-                            <!-- No tags state -->
-                            <tr x-show="filteredTags.length === 0">
-                                <td colspan="2" class="px-6 py-12 text-center text-gray-500">
-                                    <div class="flex flex-col items-center">
-                                        <i class="fas fa-tags text-4xl text-gray-300 mb-4"></i>
-                                        <p class="text-lg font-medium">No tags found</p>
-                                        <p class="text-sm">Try adding a new tag</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Pagination -->
-                <div class="px-6 py-4 border-t border-gray-200/50 bg-gray-50/30 backdrop-blur-sm">
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-700">
-                            Showing <span class="font-medium" x-text="startIndex + 1"></span> to <span class="font-medium" x-text="Math.min(endIndex, filteredTags.length)"></span> of <span class="font-medium" x-text="filteredTags.length"></span> results
+                <!-- Right Side - Account Overview (1/4 width) -->
+                <div class="xl:col-span-1 space-y-6">
+                    <!-- WABA Account Selector -->
+                    <div class="bg-white/80 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Select WABA Account</h3>
+                        <div x-data="{ wabaOpen: false }" class="relative">
+                            <button @click="wabaOpen = !wabaOpen" 
+                                    class="w-full flex items-center justify-between p-3 bg-white/50 border border-gray-200/50 rounded-lg hover:bg-gray-50/50 transition-colors">
+                                <span class="text-gray-700" x-text="selectedWaba ? selectedWaba.phone_number_id : 'Select Account'"></span>
+                                <i class="fas fa-chevron-down transition-transform duration-200" :class="wabaOpen ? 'rotate-180' : ''"></i>
+                            </button>
+                            <div x-show="wabaOpen" 
+                                 @click.away="wabaOpen = false"
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 scale-95"
+                                 x-transition:enter-end="opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="opacity-100 scale-100"
+                                 x-transition:leave-end="opacity-0 scale-95"
+                                 class="absolute z-10 w-full mt-2 bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20 py-2">
+                                <template x-for="waba in wabaAccounts" :key="waba.phone_number_id">
+                                    <button @click="selectWaba(waba); wabaOpen = false" 
+                                            class="w-full text-left px-4 py-2 hover:bg-gray-100/50 transition-colors">
+                                        <span x-text="waba.phone_number_id"></span>
+                                    </button>
+                                </template>
+                            </div>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <button @click="previousPage()" 
-                                    :disabled="currentPage === 1"
-                                    class="px-3 py-2 text-sm font-medium text-gray-500 bg-white/50 backdrop-blur-sm border border-gray-300/50 rounded-lg hover:bg-gray-50/50 disabled:opacity-50 transition-all">
-                                <i class="fas fa-chevron-left mr-1"></i>
-                                Previous
+                    </div>
+
+                    <!-- Account Overview -->
+                    <div class="bg-white/80 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900">Account Overview</h3>
+                            <button @click="editProfile()" class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100/50 transition-colors" title="Edit Profile">
+                                <i class="fas fa-edit"></i>
                             </button>
-                            <span class="px-3 py-2 text-sm font-medium text-gray-700">
-                                Page <span x-text="currentPage"></span> of <span x-text="totalPages"></span>
-                            </span>
-                            <button @click="nextPage()" 
-                                    :disabled="currentPage === totalPages || totalPages === 0"
-                                    class="px-3 py-2 text-sm font-medium text-gray-500 bg-white/50 backdrop-blur-sm border border-gray-300/50 rounded-lg hover:bg-gray-50/50 disabled:opacity-50 transition-all">
-                                Next
-                                <i class="fas fa-chevron-right ml-1"></i>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div x-show="profileLoading" class="flex flex-col items-center py-8">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
+                            <p class="text-gray-500">Loading profile...</p>
+                        </div>
+
+                        <!-- Error State -->
+                        <div x-show="profileError && !profileLoading" class="text-center py-8">
+                            <i class="fas fa-exclamation-triangle text-4xl text-red-300 mb-4"></i>
+                            <p class="text-red-500 mb-4" x-text="profileError"></p>
+                            <button @click="fetchProfile()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                Try Again
                             </button>
+                        </div>
+
+                        <!-- Profile Content -->
+                        <div x-show="!profileLoading && !profileError && profileData" class="space-y-4">
+                            <!-- Profile Picture and Name -->
+                            <div class="text-center">
+                                <img :src="profileData.profile_picture_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profileData.verified_name || 'User') + '&background=22c55e&color=fff'" 
+                                     :alt="profileData.verified_name" 
+                                     class="w-20 h-20 rounded-full mx-auto mb-4 shadow-lg">
+                                <h4 class="text-xl font-bold text-gray-900" x-text="profileData.verified_name || 'N/A'"></h4>
+                                <p class="text-gray-600 text-sm mt-1" x-text="profileData.about || 'No description available'"></p>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="space-y-3 pt-4 border-t border-gray-200/50">
+                                <!-- Phone Number -->
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-phone text-green-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wide">Phone Number</p>
+                                        <p class="font-medium text-gray-900" x-text="profileData.display_phone_number || 'N/A'"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-envelope text-blue-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wide">Email</p>
+                                        <p class="font-medium text-gray-900" x-text="profileData.email || 'N/A'"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Website -->
+                                <div x-show="profileData.websites" class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-globe text-purple-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wide">Website</p>
+                                        <a :href="profileData.websites" target="_blank" class="font-medium text-blue-600 hover:text-blue-800 transition-colors" x-text="profileData.websites"></a>
+                                    </div>
+                                </div>
+
+                                <!-- Address -->
+                                <div x-show="profileData.address" class="flex items-start space-x-3">
+                                    <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mt-1">
+                                        <i class="fas fa-map-marker-alt text-orange-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wide">Address</p>
+                                        <p class="font-medium text-gray-900 text-sm leading-relaxed" x-text="profileData.address"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Business Account Status -->
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-check-circle text-green-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wide">Account Status</p>
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full" 
+                                              :class="profileData.is_official_business_account ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'"
+                                              x-text="profileData.is_official_business_account ? 'Official Business' : 'Standard Account'"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Messaging Limit -->
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-layer-group text-indigo-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wide">Messaging Tier</p>
+                                        <p class="font-medium text-gray-900" x-text="profileData.messaging_limit_tier || 'N/A'"></p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-
-    <!-- Add Tag Modal -->
-    <div x-show="showAddModal" 
-         class="fixed inset-0 z-50 overflow-y-auto" 
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0">
-        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
-            </div>
-
-            <div @click.away="showAddModal = false" 
-                 class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                Add New Tag
-                            </h3>
-                            <div class="mt-4">
-                                <label for="tagName" class="block text-sm font-medium text-gray-700">Tag Name</label>
-                                <input type="text" 
-                                       id="tagName" 
-                                       x-model="newTag.name" 
-                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button @click="addTag()" 
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Add Tag
-                    </button>
-                    <button @click="showAddModal = false" 
-                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Tag Modal -->
-    <div x-show="showEditModal" 
-         class="fixed inset-0 z-50 overflow-y-auto" 
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0">
-        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
-            </div>
-
-            <div @click.away="showEditModal = false" 
-                 class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                Edit Tag
-                            </h3>
-                            <div class="mt-4">
-                                <label for="editTagName" class="block text-sm font-medium text-gray-700">Tag Name</label>
-                                <input type="text" 
-                                       id="editTagName" 
-                                       x-model="editingTag.name" 
-                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button @click="updateTag()" 
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Update Tag
-                    </button>
-                    <button @click="showEditModal = false" 
-                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow
-                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>
-function tagsPage() {
+function dashboardPage() {
     return {
         sidebarOpen: true,
-        searchTerm: '',
-        currentPage: 1,
-        itemsPerPage: 10,
-        showAddModal: false,
-        showEditModal: false,
-        newTag: {
-            name: ''
+        profileLoading: true,
+        profileError: null,
+        profileData: {}, // Initialize as empty object to prevent null errors
+        wabaAccounts: [],
+        selectedWaba: null,
+
+        async init() {
+            await this.initializeWabaAccounts();
+            await this.fetchProfile();
         },
-        editingTag: {
-            id: null,
-            name: ''
-        },
-        tags: [
-            { id: 1, name: 'Premium' },
-            { id: 2, name: 'Active' },
-            { id: 3, name: 'New' },
-            { id: 4, name: 'Interested' },
-            { id: 5, name: 'Loyal' },
-            { id: 6, name: 'Potential' },
-            { id: 7, name: 'Inactive' },
-            { id: 8, name: 'VIP' },
-            { id: 9, name: 'Business' },
-            { id: 10, name: 'Retail' }
-        ],
-        filteredTags: [],
-        
-        init() {
-            this.filteredTags = this.tags;
-        },
-        
-        filterTags() {
-            if (this.searchTerm === '') {
-                this.filteredTags = this.tags;
-            } else {
-                this.filteredTags = this.tags.filter(tag => 
-                    tag.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-                );
-            }
-            this.currentPage = 1; // Reset to first page when searching
-        },
-        
-        get totalPages() {
-            return Math.ceil(this.filteredTags.length / this.itemsPerPage) || 1;
-        },
-        
-        get startIndex() {
-            return (this.currentPage - 1) * this.itemsPerPage;
-        },
-        
-        get endIndex() {
-            return this.startIndex + this.itemsPerPage;
-        },
-        
-        get paginatedTags() {
-            return this.filteredTags.slice(this.startIndex, this.endIndex);
-        },
-        
-        nextPage() {
-            if (this.currentPage < this.totalPages) {
-                this.currentPage++;
-            }
-        },
-        
-        previousPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--;
-            }
-        },
-        
-        addTag() {
-            if (this.newTag.name.trim() !== '') {
-                const newId = this.tags.length > 0 ? Math.max(...this.tags.map(t => t.id)) + 1 : 1;
-                this.tags.push({
-                    id: newId,
-                    name: this.newTag.name.trim()
-                });
-                this.newTag.name = '';
-                this.showAddModal = false;
-                this.filterTags();
-            }
-        },
-        
-        editTag(tag) {
-            this.editingTag = { ...tag };
-            this.showEditModal = true;
-        },
-        
-        updateTag() {
-            if (this.editingTag.name.trim() !== '') {
-                const index = this.tags.findIndex(t => t.id === this.editingTag.id);
-                if (index !== -1) {
-                    this.tags[index].name = this.editingTag.name.trim();
-                    this.showEditModal = false;
-                    this.filterTags();
+
+        async initializeWabaAccounts() {
+            try {
+                const phoneNumberId = '{{ session("phone_number_id") ?? "N/A" }}';
+                if (phoneNumberId === 'N/A') {
+                    console.warn('No phone_number_id found in session');
+                    this.profileError = 'No WABA account selected. Please log in again.';
+                    return;
                 }
+                this.wabaAccounts = [{ phone_number_id: phoneNumberId }];
+                this.selectedWaba = this.wabaAccounts[0];
+                console.log('Initialized WABA accounts:', this.wabaAccounts);
+                console.log('Selected WABA:', this.selectedWaba);
+            } catch (error) {
+                console.error('Error initializing WABA accounts:', error);
+                this.profileError = 'Failed to initialize WABA accounts. Please try again.';
             }
         },
-        
-        deleteTag(id) {
-            if (confirm('Are you sure you want to delete this tag?')) {
-                this.tags = this.tags.filter(t => t.id !== id);
-                this.filterTags();
+
+        selectWaba(waba) {
+            this.selectedWaba = waba;
+            console.log('Selected WABA:', waba);
+            this.fetchProfile(waba.phone_number_id);
+        },
+
+        async fetchProfile(phoneNumberId = null) {
+            try {
+                this.profileLoading = true;
+                this.profileError = null;
+
+                const id = phoneNumberId || '{{ session("phone_number_id") ?? "N/A" }}';
+                const token = '{{ session("tickzap_token") ?? "" }}';
+                if (!id || id === 'N/A') {
+                    throw new Error('No valid phone_number_id provided');
+                }
+                if (!token) {
+                    throw new Error('No authentication token provided');
+                }
+
+                console.log('Fetching profile for phone_number_id:', id);
+                console.log('Using token:', token);
+
+                const response = await fetch(`https://api.tickzap.com/api/phone-profile/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        throw new Error('Authentication failed. Please log in again.');
+                    } else if (response.status === 404) {
+                        throw new Error(`Profile not found for phone_number_id: ${id}`);
+                    } else {
+                        const errorText = await response.text();
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                    }
+                }
+
+                const data = await response.json();
+                console.log('Profile API Response:', data);
+
+                if (data.success && data.data) {
+                    this.profileData = {
+                        phone_number_id: data.data.phone_number_id || 'N/A',
+                        about: data.data.about || 'No description available',
+                        address: data.data.address || 'N/A',
+                        email: data.data.email || 'N/A',
+                        websites: data.data.websites || 'N/A',
+                        profile_picture_url: data.data.profile_picture_url || 'https://ui-avatars.com/api/?name=User&background=22c55e&color=fff',
+                        verified_name: data.data.verified_name || 'N/A',
+                        display_phone_number: data.data.display_phone_number || 'N/A',
+                        is_official_business_account: data.data.is_official_business_account || 0,
+                        messaging_limit_tier: data.data.messaging_limit_tier || 'N/A'
+                    };
+                } else {
+                    throw new Error('Invalid response format: Expected success and data fields');
+                }
+
+            } catch (error) {
+                console.error('Error fetching profile:', error.message);
+                this.profileError = error.message || 'Failed to load profile. Please try again.';
+                if (error.message.includes('Authentication failed')) {
+                    window.location.href = '{{ route("login") }}';
+                }
+            } finally {
+                this.profileLoading = false;
             }
+        },
+
+        editProfile() {
+            // Placeholder for edit functionality
+            alert('Edit profile functionality will be implemented soon.');
         }
     }
 }
