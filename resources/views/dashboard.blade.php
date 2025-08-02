@@ -303,13 +303,24 @@
                 <!-- Left Side - Stats and Messages (3/4 width) -->
                 <div class="xl:col-span-3 space-y-6">
                     <!-- Stats Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div x-show="statsLoading" class="flex justify-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
+                        <p class="text-gray-500 ml-2">Loading stats...</p>
+                    </div>
+                    <div x-show="statsError && !statsLoading" class="text-center py-8">
+                        <i class="fas fa-exclamation-triangle text-4xl text-red-300 mb-4"></i>
+                        <p class="text-red-500 mb-4" x-text="statsError"></p>
+                        <button @click="fetchMonthlyStats()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                            Try Again
+                        </button>
+                    </div>
+                    <div x-show="!statsLoading && !statsError" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Total Messages -->
                         <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-blue-100 text-sm font-medium">Total Messages</p>
-                                    <p class="text-3xl font-bold">12,345</p>
+                                    <p class="text-3xl font-bold" x-text="statsData.total_messages || '0'"></p>
                                     <p class="text-blue-100 text-sm mt-1">
                                         <span class="text-green-300">+12%</span> from last month
                                     </p>
@@ -325,7 +336,7 @@
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-green-100 text-sm font-medium">Total Sent</p>
-                                    <p class="text-3xl font-bold">8,234</p>
+                                    <p class="text-3xl font-bold" x-text="statsData.total_sent || '0'"></p>
                                     <p class="text-green-100 text-sm mt-1">
                                         <span class="text-blue-300">+8%</span> from last month
                                     </p>
@@ -341,7 +352,7 @@
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-purple-100 text-sm font-medium">Total Received</p>
-                                    <p class="text-3xl font-bold">4,111</p>
+                                    <p class="text-3xl font-bold" x-text="statsData.total_received || '0'"></p>
                                     <p class="text-purple-100 text-sm mt-1">
                                         <span class="text-yellow-300">+15%</span> from last month
                                     </p>
@@ -357,7 +368,7 @@
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-orange-100 text-sm font-medium">Total Templates</p>
-                                    <p class="text-3xl font-bold">45</p>
+                                    <p class="text-3xl font-bold" x-text="statsData.total_templates || '0'"></p>
                                     <p class="text-orange-100 text-sm mt-1">
                                         <span class="text-green-300">+3%</span> from last month
                                     </p>
@@ -388,7 +399,21 @@
 
                         <!-- Table Content -->
                         <div class="overflow-x-auto">
-                            <table class="w-full">
+                            <!-- Loading State -->
+                            <div x-show="messagesLoading" class="flex justify-center py-8">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
+                                <p class="text-gray-500 ml-2">Loading messages...</p>
+                            </div>
+                            <!-- Error State -->
+                            <div x-show="messagesError && !messagesLoading" class="text-center py-8">
+                                <i class="fas fa-exclamation-triangle text-4xl text-red-300 mb-4"></i>
+                                <p class="text-red-500 mb-4" x-text="messagesError"></p>
+                                <button @click="fetchMessages()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                    Try Again
+                                </button>
+                            </div>
+                            <!-- Table -->
+                            <table x-show="!messagesLoading && !messagesError" class="w-full">
                                 <thead class="bg-gray-50/50 backdrop-blur-sm border-b border-gray-200/50">
                                     <tr>
                                         <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -400,107 +425,46 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white/30 backdrop-blur-sm divide-y divide-gray-200/50">
-                                    <!-- Sample Row 1 -->
-                                    <tr class="hover:bg-gray-50/50 transition-colors">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                                Delivered
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">John Doe</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-gray-500 hidden md:table-cell">2024-01-15 10:30 AM</td>
-                                        <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-900">+1234567890</td>
-                                        <td class="px-6 py-4 text-gray-500 hidden lg:table-cell max-w-xs truncate">Hello, how can I help you today?</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right">
-                                            <div x-data="{ actionOpen: false }" class="relative">
-                                                <button @click="actionOpen = !actionOpen" 
-                                                        class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100/50 transition-colors">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
-                                                <div x-show="actionOpen" 
-                                                     @click.away="actionOpen = false"
-                                                     x-transition
-                                                     class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20 py-2 z-10">
-                                                    <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100/50 transition-colors">
-                                                        <i class="fas fa-eye mr-3 text-gray-400"></i>
-                                                        View Details
-                                                    </a>
-                                                    <a href="#" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50/50 transition-colors">
-                                                        <i class="fas fa-trash mr-3"></i>
-                                                        Delete
-                                                    </a>
+                                    <template x-for="message in messagesData" :key="message.id">
+                                        <tr class="hover:bg-gray-50/50 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                                                      :class="{
+                                                          'bg-green-100 text-green-800': message.status === 'delivered',
+                                                          'bg-blue-100 text-blue-800': message.status === 'read',
+                                                          'bg-red-100 text-red-800': message.status === 'failed',
+                                                          'bg-gray-100 text-gray-800': message.status === '' || message.status === null
+                                                      }">
+                                                    <span x-text="message.status || 'none'"></span>
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900" x-text="message.display_phone_number || 'null'"></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 hidden md:table-cell" x-text="message.formatted_timestamp || 'null'"></td>
+                                            <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-900" x-text="message.wa_id || 'null'"></td>
+                                            <td class="px-6 py-4 text-gray-500 hidden lg:table-cell max-w-xs truncate" x-text="message.message_body || 'null'"></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                                <div x-data="{ actionOpen: false }" class="relative">
+                                                    <button @click="actionOpen = !actionOpen" 
+                                                            class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100/50 transition-colors">
+                                                        <i class="fas fa-ellipsis-h"></i>
+                                                    </button>
+                                                    <div x-show="actionOpen" 
+                                                         @click.away="actionOpen = false"
+                                                         x-transition
+                                                         class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20 py-2 z-10">
+                                                        <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100/50 transition-colors">
+                                                            <i class="fas fa-eye mr-3 text-gray-400"></i>
+                                                            View Details
+                                                        </a>
+                                                        <a href="#" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50/50 transition-colors">
+                                                            <i class="fas fa-trash mr-3"></i>
+                                                            Delete
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Sample Row 2 -->
-                                    <tr class="hover:bg-gray-50/50 transition-colors">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                Sent
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Jane Smith</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-gray-500 hidden md:table-cell">2024-01-15 09:15 AM</td>
-                                        <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-900">+0987654321</td>
-                                        <td class="px-6 py-4 text-gray-500 hidden lg:table-cell max-w-xs truncate">Thank you for your quick response!</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right">
-                                            <div x-data="{ actionOpen: false }" class="relative">
-                                                <button @click="actionOpen = !actionOpen" 
-                                                        class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100/50 transition-colors">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
-                                                <div x-show="actionOpen" 
-                                                     @click.away="actionOpen = false"
-                                                     x-transition
-                                                     class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20 py-2 z-10">
-                                                    <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100/50 transition-colors">
-                                                        <i class="fas fa-eye mr-3 text-gray-400"></i>
-                                                        View Details
-                                                    </a>
-                                                    <a href="#" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50/50 transition-colors">
-                                                        <i class="fas fa-trash mr-3"></i>
-                                                        Delete
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Sample Row 3 -->
-                                    <tr class="hover:bg-gray-50/50 transition-colors">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                                Failed
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Mike Johnson</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-gray-500 hidden md:table-cell">2024-01-15 08:45 AM</td>
-                                        <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-900">+1122334455</td>
-                                        <td class="px-6 py-4 text-gray-500 hidden lg:table-cell max-w-xs truncate">Can you please send me the details?</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right">
-                                            <div x-data="{ actionOpen: false }" class="relative">
-                                                <button @click="actionOpen = !actionOpen" 
-                                                        class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100/50 transition-colors">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
-                                                <div x-show="actionOpen" 
-                                                     @click.away="actionOpen = false"
-                                                     x-transition
-                                                     class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/20 py-2 z-10">
-                                                    <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100/50 transition-colors">
-                                                        <i class="fas fa-eye mr-3 text-gray-400"></i>
-                                                        View Details
-                                                    </a>
-                                                    <a href="#" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50/50 transition-colors">
-                                                        <i class="fas fa-trash mr-3"></i>
-                                                        Delete
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
+                                    </template>
                                 </tbody>
                             </table>
                         </div>
@@ -509,7 +473,7 @@
                         <div class="px-6 py-4 border-t border-gray-200/50 bg-gray-50/30 backdrop-blur-sm">
                             <div class="flex items-center justify-between">
                                 <div class="text-sm text-gray-700">
-                                    Showing <span class="font-medium">1</span> to <span class="font-medium">3</span> of <span class="font-medium">3</span> results
+                                    Showing <span class="font-medium" x-text="messagesData.length"></span> of <span class="font-medium" x-text="messagesData.length"></span> results
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white/50 backdrop-blur-sm border border-gray-300/50 rounded-lg hover:bg-gray-50/50 disabled:opacity-50 transition-all" disabled>
@@ -794,6 +758,17 @@ function dashboardPage() {
         wabaAccounts: [],
         selectedWaba: null,
         editModalOpen: false,
+        statsLoading: false,
+        statsError: null,
+        statsData: {
+            total_messages: 0,
+            total_sent: 0,
+            total_received: 0,
+            total_templates: 0
+        },
+        messagesLoading: false,
+        messagesError: null,
+        messagesData: [],
         editForm: {
             about: '',
             description: '',
@@ -805,10 +780,18 @@ function dashboardPage() {
         async init() {
             await this.initializeWabaAccounts();
             if (this.selectedWaba && this.selectedWaba.phone_number_id !== 'N/A') {
-                await this.fetchProfile();
+                await Promise.all([
+                    this.fetchProfile(),
+                    this.fetchMonthlyStats(),
+                    this.fetchMessages()
+                ]);
             } else {
                 this.profileError = 'No valid WABA account found. Please select an account or log in again.';
+                this.statsError = 'No valid WABA account found. Please select an account or log in again.';
+                this.messagesError = 'No valid WABA account found. Please select an account or log in again.';
                 this.profileLoading = false;
+                this.statsLoading = false;
+                this.messagesLoading = false;
             }
         },
 
@@ -828,6 +811,8 @@ function dashboardPage() {
             } catch (error) {
                 console.error('Error initializing WABA accounts:', error);
                 this.profileError = 'Failed to initialize WABA accounts. Please try again.';
+                this.statsError = 'Failed to initialize WABA accounts. Please try again.';
+                this.messagesError = 'Failed to initialize WABA accounts. Please try again.';
             }
         },
 
@@ -872,9 +857,15 @@ function dashboardPage() {
             console.log('Selected WABA:', waba);
             if (waba && waba.phone_number_id !== 'N/A') {
                 this.fetchProfile(waba.phone_number_id);
+                this.fetchMonthlyStats();
+                this.fetchMessages();
             } else {
                 this.profileError = 'Invalid WABA account selected. Please try another account.';
+                this.statsError = 'Invalid WABA account selected. Please try another account.';
+                this.messagesError = 'Invalid WABA account selected. Please try another account.';
                 this.profileLoading = false;
+                this.statsLoading = false;
+                this.messagesLoading = false;
             }
         },
 
@@ -952,6 +943,126 @@ function dashboardPage() {
                 }
             } finally {
                 this.profileLoading = false;
+            }
+        },
+
+        async fetchMonthlyStats() {
+            try {
+                this.statsLoading = true;
+                this.statsError = null;
+
+                const wabaId = '378243102032704'; // Hardcoded from API endpoint
+                const token = '{{ session("tickzap_token") ?? "" }}';
+                if (!token) {
+                    throw new Error('No authentication token provided');
+                }
+
+                console.log('Fetching monthly stats for WABA ID:', wabaId);
+
+                const response = await fetch(`https://waba.mpocket.in/api/messages/monthly_stats/${wabaId}?accessToken=${token}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        throw new Error('Authentication failed. Please log in again.');
+                    } else {
+                        const errorText = await response.text();
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                    }
+                }
+
+                const data = await response.json();
+                console.log('Monthly Stats API Response:', data);
+
+                if (data.success && data.data) {
+                    this.statsData = {
+                        total_messages: data.data.total_messages || 0,
+                        total_sent: data.data.total_sent || 0,
+                        total_received: data.data.total_received || 0,
+                        total_templates: data.data.total_templates || 0
+                    };
+                } else {
+                    throw new Error('Invalid response format: Expected success and data fields');
+                }
+
+            } catch (error) {
+                console.error('Error fetching monthly stats:', error.message);
+                this.statsError = error.message || 'Failed to load monthly stats. Please try again.';
+                if (error.message.includes('Authentication failed')) {
+                    window.location.href = '{{ route("login") }}';
+                }
+            } finally {
+                this.statsLoading = false;
+            }
+        },
+
+        async fetchMessages() {
+            try {
+                this.messagesLoading = true;
+                this.messagesError = null;
+
+                const wabaId = '378243102032704'; // Hardcoded from API endpoint
+                const token = '{{ session("tickzap_token") ?? "" }}';
+                if (!token) {
+                    throw new Error('No authentication token provided');
+                }
+
+                console.log('Fetching last ten messages for WABA ID:', wabaId);
+
+                const response = await fetch(`https://waba.mpocket.in/api/messages/last-ten/${wabaId}?accessToken=${token}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        throw new Error('Authentication failed. Please log in again.');
+                    } else {
+                        const errorText = await response.text();
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                    }
+                }
+
+                const data = await response.json();
+                console.log('Messages API Response:', data);
+
+                if (data.success && data.messages) {
+                    this.messagesData = data.messages.map(message => ({
+                        id: message.id,
+                        status: message.status || '',
+                        display_phone_number: message.display_phone_number || 'null',
+                        timestamp: message.timestamp,
+                        formatted_timestamp: message.timestamp ? new Date(message.timestamp * 1000).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        }) : 'null',
+                        wa_id: message.wa_id || 'null',
+                        message_body: message.message_body || 'null'
+                    }));
+                } else {
+                    throw new Error('Invalid response format: Expected success and messages fields');
+                }
+
+            } catch (error) {
+                console.error('Error fetching messages:', error.message);
+                this.messagesError = error.message || 'Failed to load messages. Please try again.';
+                if (error.message.includes('Authentication failed')) {
+                    window.location.href = '{{ route("login") }}';
+                }
+            } finally {
+                this.messagesLoading = false;
             }
         },
 
