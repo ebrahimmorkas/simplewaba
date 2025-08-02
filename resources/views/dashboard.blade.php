@@ -670,33 +670,159 @@
             </div>
         </main>
     </div>
+
+    <!-- Edit Profile Modal -->
+    <div x-show="editModalOpen" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-50 overflow-y-auto" 
+         x-cloak>
+        
+        <!-- Background Overlay -->
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+                 @click="closeEditModal()"></div>
+
+            <!-- Modal Content -->
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                
+                <!-- Modal Header -->
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Edit Profile</h3>
+                        <button @click="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+
+                    <!-- Modal Form -->
+                    <form @submit.prevent="saveProfile()" class="space-y-4">
+                        <!-- About -->
+                        <div>
+                            <label for="about" class="block text-sm font-medium text-gray-700 mb-1">About</label>
+                            <textarea id="about"
+                                      x-model="editForm.about"
+                                      rows="3"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                                      placeholder="Enter business description"></textarea>
+                        </div>
+
+                        <!-- Description -->
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                            <textarea id="description"
+                                      x-model="editForm.description"
+                                      rows="3"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                                      placeholder="Enter short description"></textarea>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" 
+                                   id="email"
+                                   x-model="editForm.email"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                                   placeholder="Enter email address">
+                        </div>
+
+                        <!-- Website -->
+                        <div>
+                            <label for="websites" class="block text-sm font-medium text-gray-700 mb-1">Website</label>
+                            <input type="url" 
+                                   id="websites"
+                                   x-model="editForm.websites"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                                   placeholder="Enter website URL">
+                        </div>
+
+                        <!-- Address -->
+                        <div>
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            <textarea id="address"
+                                      x-model="editForm.address"
+                                      rows="2"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                                      placeholder="Enter business address"></textarea>
+                        </div>
+
+                        <!-- Modal Actions -->
+                        <div class="flex justify-end space-x-3 pt-4">
+                            <button type="button" 
+                                    @click="closeEditModal()"
+                                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    :disabled="profileLoading"
+                                    class="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span x-show="!profileLoading">Save Changes</span>
+                                <span x-show="profileLoading" class="flex items-center">
+                                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Saving...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
 function dashboardPage() {
     return {
         sidebarOpen: true,
-        profileLoading: true,
+        profileLoading: false,
         profileError: null,
         profileData: {}, // Initialize as empty object to prevent null errors
         wabaAccounts: [],
         selectedWaba: null,
+        editModalOpen: false,
+        editForm: {
+            about: '',
+            description: '',
+            email: '',
+            websites: '',
+            address: ''
+        },
 
         async init() {
             await this.initializeWabaAccounts();
-            await this.fetchProfile();
+            if (this.selectedWaba && this.selectedWaba.phone_number_id !== 'N/A') {
+                await this.fetchProfile();
+            } else {
+                this.profileError = 'No valid WABA account found. Please select an account or log in again.';
+                this.profileLoading = false;
+            }
         },
 
         async initializeWabaAccounts() {
             try {
                 const phoneNumberId = '{{ session("phone_number_id") ?? "N/A" }}';
+                console.log('Session phone_number_id:', phoneNumberId);
                 if (phoneNumberId === 'N/A') {
                     console.warn('No phone_number_id found in session');
-                    this.profileError = 'No WABA account selected. Please log in again.';
-                    return;
+                    await this.fetchWabaAccounts();
+                } else {
+                    this.wabaAccounts = [{ phone_number_id: phoneNumberId }];
+                    this.selectedWaba = this.wabaAccounts[0];
                 }
-                this.wabaAccounts = [{ phone_number_id: phoneNumberId }];
-                this.selectedWaba = this.wabaAccounts[0];
                 console.log('Initialized WABA accounts:', this.wabaAccounts);
                 console.log('Selected WABA:', this.selectedWaba);
             } catch (error) {
@@ -705,10 +831,51 @@ function dashboardPage() {
             }
         },
 
+        async fetchWabaAccounts() {
+            try {
+                const token = '{{ session("tickzap_token") ?? "" }}';
+                if (!token) {
+                    throw new Error('No authentication token provided');
+                }
+                const response = await fetch('https://api.tickzap.com/api/wabas', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch WABA accounts: HTTP status ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('WABA API Response:', data);
+                if (data.success && data.wabas) {
+                    this.wabaAccounts = Object.values(data.wabas).flatMap(waba =>
+                        (waba.phone_numbers || []).map(phone => ({
+                            phone_number_id: phone.phone_number_id || 'N/A'
+                        }))
+                    );
+                    this.selectedWaba = this.wabaAccounts[0] || null;
+                } else {
+                    throw new Error('Invalid WABA response format');
+                }
+            } catch (error) {
+                console.error('Error fetching WABA accounts:', error);
+                this.wabaAccounts = [{ phone_number_id: 'N/A' }];
+                this.selectedWaba = null;
+            }
+        },
+
         selectWaba(waba) {
             this.selectedWaba = waba;
             console.log('Selected WABA:', waba);
-            this.fetchProfile(waba.phone_number_id);
+            if (waba && waba.phone_number_id !== 'N/A') {
+                this.fetchProfile(waba.phone_number_id);
+            } else {
+                this.profileError = 'Invalid WABA account selected. Please try another account.';
+                this.profileLoading = false;
+            }
         },
 
         async fetchProfile(phoneNumberId = null) {
@@ -716,7 +883,7 @@ function dashboardPage() {
                 this.profileLoading = true;
                 this.profileError = null;
 
-                const id = phoneNumberId || '{{ session("phone_number_id") ?? "N/A" }}';
+                const id = phoneNumberId || (this.selectedWaba ? this.selectedWaba.phone_number_id : '{{ session("phone_number_id") ?? "N/A" }}');
                 const token = '{{ session("tickzap_token") ?? "" }}';
                 if (!id || id === 'N/A') {
                     throw new Error('No valid phone_number_id provided');
@@ -757,12 +924,21 @@ function dashboardPage() {
                         about: data.data.about || 'No description available',
                         address: data.data.address || 'N/A',
                         email: data.data.email || 'N/A',
-                        websites: data.data.websites || 'N/A',
+                        websites: Array.isArray(data.data.websites) ? data.data.websites[0] || 'N/A' : data.data.websites || 'N/A',
+                        description: data.data.description || 'N/A',
                         profile_picture_url: data.data.profile_picture_url || 'https://ui-avatars.com/api/?name=User&background=22c55e&color=fff',
                         verified_name: data.data.verified_name || 'N/A',
                         display_phone_number: data.data.display_phone_number || 'N/A',
                         is_official_business_account: data.data.is_official_business_account || 0,
                         messaging_limit_tier: data.data.messaging_limit_tier || 'N/A'
+                    };
+                    // Pre-fill edit form with profile data
+                    this.editForm = {
+                        about: this.profileData.about,
+                        description: this.profileData.description,
+                        email: this.profileData.email,
+                        websites: this.profileData.websites,
+                        address: this.profileData.address
                     };
                 } else {
                     throw new Error('Invalid response format: Expected success and data fields');
@@ -780,8 +956,88 @@ function dashboardPage() {
         },
 
         editProfile() {
-            // Placeholder for edit functionality
-            alert('Edit profile functionality will be implemented soon.');
+            this.editModalOpen = true;
+            // Ensure editForm is populated even if fetchProfile hasn't run
+            this.editForm = {
+                about: this.profileData.about || 'No description available',
+                description: this.profileData.description || 'N/A',
+                email: this.profileData.email || 'N/A',
+                websites: this.profileData.websites || 'N/A',
+                address: this.profileData.address || 'N/A'
+            };
+        },
+
+        closeEditModal() {
+            this.editModalOpen = false;
+            this.profileLoading = false;
+        },
+
+        async saveProfile() {
+            try {
+                this.profileLoading = true;
+                this.profileError = null;
+
+                const id = this.selectedWaba ? this.selectedWaba.phone_number_id : '{{ session("phone_number_id") ?? "N/A" }}';
+                const token = '{{ session("tickzap_token") ?? "" }}';
+                if (!id || id === 'N/A') {
+                    throw new Error('No valid phone_number_id provided');
+                }
+                if (!token) {
+                    throw new Error('No authentication token provided');
+                }
+
+                console.log('Saving profile for phone_number_id:', id);
+                console.log('Profile data to save:', this.editForm);
+
+                const payload = {
+                    messaging_product: 'whatsapp',
+                    about: this.editForm.about || '',
+                    description: this.editForm.description || '',
+                    email: this.editForm.email || '',
+                    address: this.editForm.address || '',
+                    websites: this.editForm.websites ? [this.editForm.websites] : [],
+                    vertical: 'PROF_SERVICES'
+                };
+
+                const response = await fetch(`https://api.tickzap.com/api/phone-profile/${id}/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Failed to save profile: HTTP status ${response.status}, message: ${errorData.message || 'Unknown error'}`);
+                }
+
+                const data = await response.json();
+                console.log('Save Profile API Response:', data);
+
+                if (data.success) {
+                    // Update profileData with the edited fields
+                    this.profileData = {
+                        ...this.profileData,
+                        about: this.editForm.about,
+                        description: this.editForm.description,
+                        email: this.editForm.email,
+                        websites: this.editForm.websites,
+                        address: this.editForm.address
+                    };
+                    this.closeEditModal();
+                    alert(data.message || 'Profile updated successfully!');
+                } else {
+                    throw new Error(data.message || 'Invalid response format: Expected success field');
+                }
+            } catch (error) {
+                console.error('Error saving profile:', error.message);
+                this.profileError = error.message || 'Failed to save profile. Please try again.';
+            } finally {
+                this.profileLoading = false;
+            }
         }
     }
 }
