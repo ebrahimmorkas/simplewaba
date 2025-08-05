@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -44,6 +45,100 @@ class DashboardController extends Controller
         ];
 
         return view('dashboard', compact('stats', 'messages'));
+    }
+
+    public function templates()
+    {
+        try {
+            $waba_id = session('waba_id', '378243102032704');
+            $phone_number_id = session('phone_number_id', '361462453714220');
+            $token = session('tickzap_token');
+
+            if (!$token) {
+                Log::error('No authentication token found in session');
+                return view('templates', ['templates' => [], 'error' => 'Authentication token missing']);
+            }
+
+            $response = Http::withToken($token)
+                ->get("https://waba.mpocket.in/api/phone/get/message_templates/{$phone_number_id}", [
+                    'accessToken' => $token
+                ]);
+
+            Log::info('Templates API Response', [
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
+
+            if ($response->successful()) {
+                $templates = $response->json('data', []);
+                return view('templates', compact('templates'));
+            } else {
+                Log::error('Failed to fetch templates', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                return view('templates', ['templates' => [], 'error' => 'Failed to fetch templates']);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error fetching templates: ' . $e->getMessage());
+            return view('templates', ['templates' => [], 'error' => 'Error connecting to API']);
+        }
+    }
+
+    public function refreshTemplates(Request $request)
+    {
+        try {
+            $waba_id = session('waba_id', '378243102032704');
+            $phone_number_id = session('phone_number_id', '361462453714220');
+            $token = session('tickzap_token');
+
+            if (!$token) {
+                Log::error('No authentication token found in session for refresh');
+                return response()->json(['error' => 'Authentication token missing'], 401);
+            }
+
+            $response = Http::withToken($token)
+                ->post("https://waba.mpocket.in/api/phone/refresh/message_templates/{$phone_number_id}", [
+                    'accessToken' => $token
+                ]);
+
+            Log::info('Refresh Templates API Response', [
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
+
+            if ($response->successful()) {
+                // Fetch updated templates after refresh
+                $templatesResponse = Http::withToken($token)
+                    ->get("https://waba.mpocket.in/api/phone/get/message_templates/{$phone_number_id}", [
+                        'accessToken' => $token
+                    ]);
+
+                if ($templatesResponse->successful()) {
+                    $templates = $templatesResponse->json('data', []);
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Templates refreshed successfully',
+                        'templates' => $templates
+                    ]);
+                } else {
+                    Log::error('Failed to fetch templates after refresh', [
+                        'status' => $templatesResponse->status(),
+                        'body' => $templatesResponse->body()
+                    ]);
+                    return response()->json(['error' => 'Failed to fetch templates after refresh'], $templatesResponse->status());
+                }
+            } else {
+                Log::error('Failed to refresh templates', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                return response()->json(['error' => 'Failed to refresh templates', 'details' => $response->json()], $response->status());
+            }
+        } catch (\Exception $e) {
+            Log::error('Error refreshing templates: ' . $e->getMessage());
+            return response()->json(['error' => 'Error connecting to API', 'details' => $e->getMessage()], 500);
+        }
     }
 
     public function contacts()

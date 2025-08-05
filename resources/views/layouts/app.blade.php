@@ -23,6 +23,9 @@
             }
         }
     </script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
 <body class="bg-gray-50">
     <div x-data="{ sidebarOpen: true }" class="flex h-screen overflow-hidden">
