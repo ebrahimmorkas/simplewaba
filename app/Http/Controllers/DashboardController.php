@@ -377,6 +377,23 @@ class DashboardController extends Controller
         }
     }
 
+    public function users()
+{
+    try {
+        $response = Http::withToken(session('tickzap_token'))
+            ->get('https://api.tickzap.com/api/users');
+
+        if ($response->successful()) {
+            $users = $response->json('users', []);
+            return view('users', compact('users'));
+        } else {
+            return view('users', ['users' => [], 'error' => 'Failed to fetch users']);
+        }
+    } catch (\Exception $e) {
+        return view('users', ['users' => [], 'error' => 'Error connecting to API']);
+    }
+}
+
     public function deleteTag($id)
     {
         try {

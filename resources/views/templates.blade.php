@@ -29,11 +29,48 @@
         </div>
 
         <!-- Navigation Menu -->
-        <nav class="mt-6" x-data="{ contactsOpen: false }">
-            <div class="px-4 space-y-2">
-                <!-- Dashboard -->
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
-                    <i class="fas fa-chart-bar w-5 text-gray-400 group-hover:text-white"></i>
+       <nav class="mt-6" x-data="{ contactsOpen: false }">
+    <div class="px-4 space-y-2">
+        <!-- Dashboard -->
+        <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative" :class="{'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg': window.location.pathname === '{{ route('dashboard') }}'}">
+            <i class="fas fa-chart-bar w-5 text-gray-400 group-hover:text-white"></i>
+            <span x-show="sidebarOpen" 
+                  x-transition:enter="transition ease-out duration-300 delay-75"
+                  x-transition:enter-start="opacity-0 transform translate-x-2"
+                  x-transition:enter-end="opacity-100 transform translate-x-0"
+                  x-transition:leave="transition ease-in duration-200"
+                  x-transition:leave-start="opacity-100 transform translate-x-0"
+                  x-transition:leave-end="opacity-0 transform translate-x-2"
+                  class="text-gray-300 group-hover:text-white">Dashboard</span>
+            <div x-show="!sidebarOpen" 
+                 class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                Dashboard
+            </div>
+        </a>
+        
+        <!-- Messages -->
+        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
+            <i class="fas fa-comments w-5 text-gray-400 group-hover:text-white"></i>
+            <span x-show="sidebarOpen" 
+                  x-transition:enter="transition ease-out duration-300 delay-75"
+                  x-transition:enter-start="opacity-0 transform translate-x-2"
+                  x-transition:enter-end="opacity-100 transform translate-x-0"
+                  x-transition:leave="transition ease-in duration-200"
+                  x-transition:leave-start="opacity-100 transform translate-x-0"
+                  x-transition:leave-end="opacity-0 transform translate-x-2"
+                  class="text-gray-300 group-hover:text-white">Messages</span>
+            <div x-show="!sidebarOpen" 
+                 class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                Messages
+            </div>
+        </a>
+        
+        <!-- Contacts with Dropdown -->
+        <div class="relative">
+            <button @click="contactsOpen = !contactsOpen" 
+                    class="w-full flex items-center justify-between space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-users w-5 text-gray-400 group-hover:text-white"></i>
                     <span x-show="sidebarOpen" 
                           x-transition:enter="transition ease-out duration-300 delay-75"
                           x-transition:enter-start="opacity-0 transform translate-x-2"
@@ -41,173 +78,143 @@
                           x-transition:leave="transition ease-in duration-200"
                           x-transition:leave-start="opacity-100 transform translate-x-0"
                           x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Dashboard</span>
-                    <!-- Tooltip for collapsed state -->
-                    <div x-show="!sidebarOpen" 
-                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                        Dashboard
-                    </div>
-                </a>
-                
-                <!-- Messages -->
-                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
-                    <i class="fas fa-comments w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Messages</span>
-                    <!-- Tooltip for collapsed state -->
-                    <div x-show="!sidebarOpen" 
-                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                        Messages
-                    </div>
-                </a>
-                
-                <!-- Contacts with Dropdown -->
-                <div class="relative">
-                    <button @click="contactsOpen = !contactsOpen" 
-                            class="w-full flex items-center justify-between space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-users w-5 text-gray-400 group-hover:text-white"></i>
-                            <span x-show="sidebarOpen" 
-                                  x-transition:enter="transition ease-out duration-300 delay-75"
-                                  x-transition:enter-start="opacity-0 transform translate-x-2"
-                                  x-transition:enter-end="opacity-100 transform translate-x-0"
-                                  x-transition:leave="transition ease-in duration-200"
-                                  x-transition:leave-start="opacity-100 transform translate-x-0"
-                                  x-transition:leave-end="opacity-0 transform translate-x-2"
-                                  class="text-gray-300 group-hover:text-white">Contacts</span>
-                        </div>
-                        <i x-show="sidebarOpen" 
-                           :class="contactsOpen ? 'rotate-180' : ''" 
-                           class="fas fa-chevron-down text-gray-400 group-hover:text-white transition-transform duration-200"></i>
-                        
-                        <!-- Tooltip for collapsed state -->
-                        <div x-show="!sidebarOpen" 
-                             class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                            Contacts
-                        </div>
-                    </button>
-                    
-                    <!-- Dropdown Menu -->
-                    <div x-show="contactsOpen && sidebarOpen" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 transform -translate-y-2"
-                         x-transition:enter-end="opacity-100 transform translate-y-0"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 transform translate-y-0"
-                         x-transition:leave-end="opacity-0 transform -translate-y-2"
-                         class="ml-4 mt-2 space-y-1">
-                        <a href="{{ route('contacts') }}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-600 transition-colors group">
-                            <i class="fas fa-user w-4 text-gray-400 group-hover:text-white"></i>
-                            <span class="text-gray-300 group-hover:text-white text-sm">Contacts</span>
-                        </a>
-                        <a href="{{ route('groups') }}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-600 transition-colors group">
-                            <i class="fas fa-users w-4 text-gray-400 group-hover:text-white"></i>
-                            <span class="text-gray-300 group-hover:text-white text-sm">Groups</span>
-                        </a>
-                        <a href="{{ route('tags') }}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-600 transition-colors group">
-                            <i class="fas fa-tags w-4 text-gray-400 group-hover:text-white"></i>
-                            <span class="text-gray-300 group-hover:text-white text-sm">Tags/Segments</span>
-                        </a>
-                    </div>
+                          class="text-gray-300 group-hover:text-white">Contacts</span>
                 </div>
-                
-                <!-- Templates - Active -->
-                <a href="{{ route('templates') }}" class="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg group">
-                    <i class="fas fa-file-alt w-5"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="font-medium">Templates</span>
-                    <!-- Tooltip for collapsed state -->
-                    <div x-show="!sidebarOpen" 
-                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                        Templates
-                    </div>
+                <i x-show="sidebarOpen" 
+                   :class="contactsOpen ? 'rotate-180' : ''" 
+                   class="fas fa-chevron-down text-gray-400 group-hover:text-white transition-transform duration-200"></i>
+                <div x-show="!sidebarOpen" 
+                     class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                    Contacts
+                </div>
+            </button>
+            
+            <div x-show="contactsOpen && sidebarOpen" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 transform -translate-y-2"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 transform translate-y-0"
+                 x-transition:leave-end="opacity-0 transform -translate-y-2"
+                 class="ml-4 mt-2 space-y-1">
+                <a href="{{ route('contacts') }}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-600 transition-colors group">
+                    <i class="fas fa-user w-4 text-gray-400 group-hover:text-white"></i>
+                    <span class="text-gray-300 group-hover:text-white text-sm">Contacts</span>
                 </a>
-                
-                <!-- Sent Messages -->
-                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
-                    <i class="fas fa-paper-plane w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Sent Messages</span>
-                    <!-- Tooltip for collapsed state -->
-                    <div x-show="!sidebarOpen" 
-                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                        Sent Messages
-                    </div>
+                <a href="{{ route('groups') }}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-600 transition-colors group">
+                    <i class="fas fa-users w-4 text-gray-400 group-hover:text-white"></i>
+                    <span class="text-gray-300 group-hover:text-white text-sm">Groups</span>
                 </a>
-                
-                <!-- Inbox -->
-                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
-                    <i class="fas fa-inbox w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Inbox</span>
-                    <!-- Tooltip for collapsed state -->
-                    <div x-show="!sidebarOpen" 
-                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                        Inbox
-                    </div>
-                </a>
-                
-                <!-- Reports -->
-                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
-                    <i class="fas fa-chart-line w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Reports</span>
-                    <!-- Tooltip for collapsed state -->
-                    <div x-show="!sidebarOpen" 
-                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                        Reports
-                    </div>
-                </a>
-                
-                <!-- Settings -->
-                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
-                    <i class="fas fa-cog w-5 text-gray-400 group-hover:text-white"></i>
-                    <span x-show="sidebarOpen" 
-                          x-transition:enter="transition ease-out duration-300 delay-75"
-                          x-transition:enter-start="opacity-0 transform translate-x-2"
-                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                          x-transition:leave="transition ease-in duration-200"
-                          x-transition:leave-start="opacity-100 transform translate-x-0"
-                          x-transition:leave-end="opacity-0 transform translate-x-2"
-                          class="text-gray-300 group-hover:text-white">Settings</span>
-                    <!-- Tooltip for collapsed state -->
-                    <div x-show="!sidebarOpen" 
-                         class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                        Settings
-                    </div>
+                <a href="{{ route('tags') }}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-600 transition-colors group">
+                    <i class="fas fa-tags w-4 text-gray-400 group-hover:text-white"></i>
+                    <span class="text-gray-300 group-hover:text-white text-sm">Tags/Segments</span>
                 </a>
             </div>
-        </nav>
+        </div>
+        
+        <!-- Templates -->
+        <a href="{{ route('templates') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative" :class="{'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg': window.location.pathname === '{{ route('templates') }}'}">
+            <i class="fas fa-file-alt w-5 text-gray-400 group-hover:text-white"></i>
+            <span x-show="sidebarOpen" 
+                  x-transition:enter="transition ease-out duration-300 delay-75"
+                  x-transition:enter-start="opacity-0 transform translate-x-2"
+                  x-transition:enter-end="opacity-100 transform translate-x-0"
+                  x-transition:leave="transition ease-in duration-200"
+                  x-transition:leave-start="opacity-100 transform translate-x-0"
+                  x-transition:leave-end="opacity-0 transform translate-x-2"
+                  class="text-gray-300 group-hover:text-white">Templates</span>
+            <div x-show="!sidebarOpen" 
+                 class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                Templates
+            </div>
+        </a>
+
+        <!-- Users -->
+        <a href="{{ route('users') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative" :class="{'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg': window.location.pathname === '{{ route('users') }}'}">
+            <i class="fas fa-user w-5 text-gray-400 group-hover:text-white"></i>
+            <span x-show="sidebarOpen" 
+                  x-transition:enter="transition ease-out duration-300 delay-75"
+                  x-transition:enter-start="opacity-0 transform translate-x-2"
+                  x-transition:enter-end="opacity-100 transform translate-x-0"
+                  x-transition:leave="transition ease-in duration-200"
+                  x-transition:leave-start="opacity-100 transform translate-x-0"
+                  x-transition:leave-end="opacity-0 transform translate-x-2"
+                  class="text-gray-300 group-hover:text-white">Users</span>
+            <div x-show="!sidebarOpen" 
+                 class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                Users
+            </div>
+        </a>
+        
+        <!-- Sent Messages -->
+        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
+            <i class="fas fa-paper-plane w-5 text-gray-400 group-hover:text-white"></i>
+            <span x-show="sidebarOpen" 
+                  x-transition:enter="transition ease-out duration-300 delay-75"
+                  x-transition:enter-start="opacity-0 transform translate-x-2"
+                  x-transition:enter-end="opacity-100 transform translate-x-0"
+                  x-transition:leave="transition ease-in duration-200"
+                  x-transition:leave-start="opacity-100 transform translate-x-0"
+                  x-transition:leave-end="opacity-0 transform translate-x-2"
+                  class="text-gray-300 group-hover:text-white">Sent Messages</span>
+            <div x-show="!sidebarOpen" 
+                 class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                Sent Messages
+            </div>
+        </a>
+        
+        <!-- Inbox -->
+        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
+            <i class="fas fa-inbox w-5 text-gray-400 group-hover:text-white"></i>
+            <span x-show="sidebarOpen" 
+                  x-transition:enter="transition ease-out duration-300 delay-75"
+                  x-transition:enter-start="opacity-0 transform translate-x-2"
+                  x-transition:enter-end="opacity-100 transform translate-x-0"
+                  x-transition:leave="transition ease-in duration-200"
+                  x-transition:leave-start="opacity-100 transform translate-x-0"
+                  x-transition:leave-end="opacity-0 transform translate-x-2"
+                  class="text-gray-300 group-hover:text-white">Inbox</span>
+            <div x-show="!sidebarOpen" 
+                 class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                Inbox
+            </div>
+        </a>
+        
+        <!-- Reports -->
+        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
+            <i class="fas fa-chart-line w-5 text-gray-400 group-hover:text-white"></i>
+            <span x-show="sidebarOpen" 
+                  x-transition:enter="transition ease-out duration-300 delay-75"
+                  x-transition:enter-start="opacity-0 transform translate-x-2"
+                  x-transition:enter-end="opacity-100 transform translate-x-0"
+                  x-transition:leave="transition ease-in duration-200"
+                  x-transition:leave-start="opacity-100 transform translate-x-0"
+                  x-transition:leave-end="opacity-0 transform translate-x-2"
+                  class="text-gray-300 group-hover:text-white">Reports</span>
+            <div x-show="!sidebarOpen" 
+                 class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                Reports
+            </div>
+        </a>
+        
+        <!-- Settings -->
+        <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors group relative">
+            <i class="fas fa-cog w-5 text-gray-400 group-hover:text-white"></i>
+            <span x-show="sidebarOpen" 
+                  x-transition:enter="transition ease-out duration-300 delay-75"
+                  x-transition:enter-start="opacity-0 transform translate-x-2"
+                  x-transition:enter-end="opacity-100 transform translate-x-0"
+                  x-transition:leave="transition ease-in duration-200"
+                  x-transition:leave-start="opacity-100 transform translate-x-0"
+                  x-transition:leave-end="opacity-0 transform translate-x-2"
+                  class="text-gray-300 group-hover:text-white">Settings</span>
+            <div x-show="!sidebarOpen" 
+                 class="absolute left-16 bg-gray-800 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                Settings
+            </div>
+        </a>
+    </div>
+</nav>
     </div>
 
     <!-- Main Content -->

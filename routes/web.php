@@ -25,4 +25,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/tags/delete/{id}', [DashboardController::class, 'deleteTag'])->name('tags.delete');
     Route::get('/templates', [DashboardController::class, 'templates'])->name('templates');
     Route::post('/templates/refresh', [DashboardController::class, 'refreshTemplates'])->name('templates.refresh');
+    Route::get('/users', [DashboardController::class, 'users'])->name('users');
 });
